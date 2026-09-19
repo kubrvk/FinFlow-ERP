@@ -9,6 +9,8 @@
 
 FinFlow ERP is a financial ledger, e-Invoice (e-Fatura / e-Arşiv), and sub-ledger reconciliation engine built in Java and Spring Boot with Microsoft SQL Server. It parses, generates, and validates standardized UBL-TR 2.1 XML documents while keeping transactional debit/credit ledger records balanced with zero float divergence.
 
+![FinFlow ERP Dashboard](docs/preview.jpg)
+
 ---
 
 ## 🏛️ Financial Architecture
