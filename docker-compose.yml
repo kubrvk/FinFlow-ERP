@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  finflow-mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: finflow-mssql
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "FinFlow_Secure_Password2026!"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssqldata:/var/opt/mssql
+
+  finflow-app:
+    build: .
+    container_name: finflow-backend
+    depends_on:
+      - finflow-mssql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:sqlserver://finflow-mssql:1433;databaseName=FinFlowDB;encrypt=false
+      SPRING_DATASOURCE_USERNAME: sa
+      SPRING_DATASOURCE_PASSWORD: FinFlow_Secure_Password2026!
+    ports:
+      - "8080:8080"
+
+volumes:
+  mssqldata:

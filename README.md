@@ -1,51 +1,91 @@
-# FinFlow-ERP
+# FinFlow ERP — Finance & E-Invoice Processing System
 
-<img align="left" width="40%" src="https://raw.githubusercontent.com/kubrvk/portfolio/main/img/galeri/site/9a.jpg"/>
+![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=flat-square)
+![Java](https://img.shields.io/badge/Java-17-orange?style=flat-square&logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.2.3-green?style=flat-square&logo=springboot)
+![MSSQL](https://img.shields.io/badge/Database-MSSQL_2022-CC292B?style=flat-square&logo=microsoftsqlserver)
+![UBL XML](https://img.shields.io/badge/Format-UBL--TR_2.1-blue?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-purple?style=flat-square)
 
-<h3><a href="https://github.com/kubrvk/FinFlow-ERP"><img src="https://img.shields.io/badge/GitHub-kubrvk%2FFinFlow-ERP-000000?style=flat-square&logo=github&logoColor=white" height="25"/></a></h3>
-
-![Java](https://img.shields.io/badge/Java_17-ED8B00?style=for-the-badges&logo=openjdk&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badges&logo=springboot&logoColor=white) ![MSSQL](https://img.shields.io/badge/Microsoft_SQL_Server-CC292B?style=for-the-badges&logo=microsoftsqlserver&logoColor=white) ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badges&logo=hibernate&logoColor=white)
-
-<br>
-
-Enterprise financial accounting ledger and regulatory UBL XML e-invoice parsing and validation engine.
-
-<br clear="left"/>
+FinFlow ERP is a financial ledger, e-Invoice (e-Fatura / e-Arşiv), and sub-ledger reconciliation engine built in Java and Spring Boot with Microsoft SQL Server. It parses, generates, and validates standardized UBL-TR 2.1 XML documents while keeping transactional debit/credit ledger records balanced with zero float divergence.
 
 ---
 
-## Technical Details
+## 🏛️ Financial Architecture
 
-| Component | Specification |
-|---|---|
-| Backend Framework | Java 17, Spring Boot 3.x |
-| ORM & Persistence | Hibernate / JPA (High-throughput Batch Queries) |
-| Database | Microsoft SQL Server (MSSQL Ledger & Stored Procedures) |
-| E-Invoice Standard | UBL 2.1 XML Parsing, XSD Schema Validation & Schematron |
-| API Architecture | RESTful Web Services for ERP Reconciliation |
-
----
-
-## Code Overview & Architecture
-
-```text
-FinFlow-ERP/
-├── src/main/java/com/finflow/
-│   ├── config/            # Database & XML Parser configuration
-│   ├── controllers/       # Invoice submission & accounting reports
-│   ├── models/            # General ledger, invoice & tax entities
-│   ├── parser/            # UBL 2.1 XML parser & schema validator
-│   ├── repository/        # MSSQL database repositories
-│   └── service/           # Balance matching & financial settlement
-├── src/main/resources/
-│   ├── schemas/           # UBL XML XSD schema definition files
-│   └── application.yml
-├── pom.xml
-└── README.md
+```
+       +-----------------------------------+
+       |       ERP Billing Modules         |
+       +-----------------+-----------------+
+                         |
+                         v
++--------------------------------------------------------------------+
+|                   FinFlow Core Service Engine                      |
+|                                                                    |
+|  +---------------------------+       +--------------------------+  |
+|  |   UBL-TR 2.1 Generator    | <---> |   XML Schema Validator   |  |
+|  |   (JAXB / XML Stream)     |       |   (XSD & Schematron)     |  |
+|  +-------------+-------------+       +--------------------------+  |
+|                |                                                   |
+|                v                                                   |
+|  +---------------------------------------------------------------+ |
+|  |               Sub-Ledger Reconciliation Worker                | |
+|  |          (Double-Entry Bookkeeping: 120 / 391 / 600)          | |
+|  +-------------------------------+-------------------------------+ |
++----------------------------------|---------------------------------+
+                                   |
+                                   v
+                   +-------------------------------+
+                   |     MSSQL 2022 Database       |
+                   |   (Invoices & Ledger Tables)  |
+                   +-------------------------------+
 ```
 
 ---
 
-## License & Author
+## 🚀 Key Features
 
-Developed by **[Beraat Yetkin](https://github.com/kubrvk)**. All rights reserved.
+- **UBL-TR 2.1 Compatibility**: Generates signed and schema-validated e-Invoice and e-Archive XML documents in compliance with statutory revenue administrations.
+- **Double-Entry Reconciliation**: Automatically dispatches balanced general ledger postings upon invoice finalization.
+- **Batch Processing**: High-performance multi-threaded invoice parser capable of indexing thousands of supplier invoices per minute.
+- **MSSQL Enterprise Integration**: Native dialect mapping, transaction isolation, and column-store indexing.
+
+---
+
+## 🔌 API Reference
+
+### Generate e-Invoice XML
+```http
+POST /api/v1/invoices/mock-generate?customerVkn=1234567890&customerTitle=TechCorp
+```
+
+**Response (Sample UBL XML Header):**
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2">
+    <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+    <cbc:ProfileID>TEMELFATURA</cbc:ProfileID>
+    <cbc:ID>GIB2026000000042</cbc:ID>
+    <cbc:DocumentCurrencyCode>TRY</cbc:DocumentCurrencyCode>
+    ...
+</Invoice>
+```
+
+---
+
+## 💻 Local Setup
+
+```bash
+git clone https://github.com/kubrvk/FinFlow-ERP.git
+cd FinFlow-ERP
+
+# Run MSSQL 2022 and Spring Boot backend
+docker compose up -d --build
+```
+
+---
+
+## 👤 Author & License
+
+- **Author**: `kubrvk` ([GitHub Profile](https://github.com/kubrvk))
+- **License**: MIT License.
