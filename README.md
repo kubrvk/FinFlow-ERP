@@ -1,105 +1,105 @@
-# FinFlow ERP 💼
-> **Kurumsal Finans & E-Fatura Terminali • SAP / NetSuite Mimarili Finansal Mizan Portalı**
+# FinFlow ERP
+> Corporate Finance & E-Invoicing Terminal • SAP & NetSuite Architecture
 
-[![Canlı Demo](https://img.shields.io/badge/Canl%C4%B1_Demo-finflow--erp.web.app-059669?style=for-the-badge&logo=google-chrome&logoColor=white)](https://finflow-erp.web.app)
-[![Lisans](https://img.shields.io/badge/Lisans-MIT-blue.svg?style=for-the-badge)](LICENSE)
-[![Teknoloji](https://img.shields.io/badge/Teknoloji-Vanilla_ES6%2B_No_Framework-yellow?style=for-the-badge&logo=javascript)](https://developer.mozilla.org)
-[![Arayüz](https://img.shields.io/badge/Tasar%C4%B1m-ERP_Sidebar_Terminal-0f172a?style=for-the-badge&logo=css3)](https://developer.mozilla.org)
-[![Dil](https://img.shields.io/badge/Dil-T%C3%BCrk%C3%A7e_%7C_English-green?style=for-the-badge)](https://finflow-erp.web.app)
-
----
-
-## 📸 Canlı Önizleme (Previews)
-
-### 1. ERP Muhasebe & E-Dönüşüm Terminali
-Sol sabit navigasyon menüsü, üst sabit metrik şeridi (TCMB canlı kurları, KDV matrahı, ciro), fatura kuyruğu ve **Fatura Satırı Silme** butonları:
-![FinFlow ERP Terminal Önizleme](docs/preview-dashboard.png)
-
-### 2. Wall Street İki Panelli Kurumsal Giriş Portalı (Two-Panel Split Portal)
-Sol panelde derin lacivert ACME Holding güven mührü, canlı TCMB döviz kurları (`USD/TRY 34.18 | EUR/TRY 37.92`), GİB v2.4 rozeti; sağ panelde temiz kurumsal muhasebe giriş formu:
-![FinFlow ERP Login Önizleme](docs/preview-login.png)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-finflow--erp.web.app-059669?style=for-the-badge)](https://finflow-erp.web.app)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![Technology](https://img.shields.io/badge/Technology-Vanilla_ES6%2B-yellow?style=for-the-badge)](https://developer.mozilla.org)
+[![Interface](https://img.shields.io/badge/Interface-ERP_Sidebar_Terminal-0f172a?style=for-the-badge)](https://developer.mozilla.org)
+[![Language Support](https://img.shields.io/badge/Language-English_%7C_Turkish-green?style=for-the-badge)](https://finflow-erp.web.app)
 
 ---
 
-## 🌟 Öne Çıkan Özellikler
+## Previews
 
-### 1. Sektöre Özgü ERP & Kurumsal Muhasebe Mimarisi
-- **SAP / NetSuite Tarzı Sol Navigasyon (`.erp-sidebar`)**: ACME Holding firma seçici, modül sekmeleri (Giden Faturalar, Yevmiye Defteri, Cari Hesaplar, Mizan Raporu, GİB Kuyruğu) ve kullanıcı profili.
-- **Üst Sabit Finansal Metrik Şeridi (`.erp-metrics-bar`)**: Toplam faturalanan ciro (TRY), hesaplanan KDV toplamı, iletilen e-fatura sayısı ve genel mizan farkı.
-- **Tabular Sayısal Tipografi**: Muhasebe tutarlarının basamak hizalaması için monospace/tabular sayı fontu entegrasyonu.
+### 1. Corporate Accounting Terminal
+Fixed left navigation sidebar, top financial metrics ticker, invoice outbox queue, and invoice deletion actions:
+![FinFlow ERP Terminal Preview](docs/preview-dashboard.png)
 
-### 2. Çift Katmanlı Veri Silme & Mizan Yeniden Hesaplaması
-- **Giden Faturayı Sil (`promptDeleteOutbox`)**: Her fatura satırında doğrudan fark edilebilir kırmızı çöp kutusu butonu yer alır. Silindiğinde fatura kuyruğu güncellenir, toplam ciro ve KDV matrahı anında dinamik olarak yeniden toplanır.
-- **Yevmiye Kaydını Sil (`promptDeleteLedger`)**: Çift taraflı muhasebe kaydı (Borç / Alacak) silindiğinde, genel mizan toplamı ve denge farkı anında otomatik olarak yeniden hesaplanır.
-- **Kalıcı `localStorage`**: Silinen faturalar tarayıcı hafızasına (`ff_outbox_v2`, `ff_ledger_v2`) işlenir, sayfa yenilense de silinen veriler geri gelmez.
-
-### 3. Oturum Kalıcılığı (Session Persistence) & Zero-Flicker Başlangıç
-- **Sayfa Yenilemelerinde Oturumu Hatırla**: Başarılı oturum açılışında `localStorage.setItem('ff_logged_in', 'true')` kaydı atılır.
-- **Sıfır Titreme (Zero-Flicker)**: Sayfa yenilendiğinde (F5) inline script kontrolü sayesinde giriş ekranı hiç açılmadan doğrudan ERP terminali yüklenir.
-- **Güvenli Çıkış**: Sol alt kullanıcı alanındaki kırmızı **"Çıkış"** butonuna basıldığında oturum sonlandırılır.
-- **Hazır Demo Bilgileri**: Giriş ekranında kurumsal e-posta ve şifre hazır girili gelir; altındaki hızlı rol butonlarıyla (`Finans Müdürü (CFO)`, `Mali Müşavir (YMM)`, `Müşteri`, `Kullanıcı`) anında rol değiştirilebilir.
-
-### 4. Çift Dilli Tam Destek (TR | EN)
-- Dil seçici (`[ TR | EN ]`) ile tüm e-fatura terimleri, vergi kimlik numaraları (VKN), borç/alacak hesap planları ve mizan başlıkları İngilizce/Türkçe arasında anında dönüştürülür.
-- Başlangıç varsayılan dili **Türkçe**'dir.
+### 2. Two-Panel Corporate Login Portal
+Left panel with ACME Holding trust seal, real-time central bank exchange rates (USD/TRY, EUR/TRY), and regulatory compliance badge; right panel with corporate accounting sign-in form:
+![FinFlow ERP Login Preview](docs/preview-login.png)
 
 ---
 
-## 🛠️ Teknoloji Yığını (Tech Stack)
+## Key Features
 
-| Bileşen | Teknoloji | Amaç |
+### Corporate ERP Architecture
+- NetSuite & SAP-inspired left navigation sidebar featuring entity selector, accounting modules (Outbox Invoices, General Ledger, Accounts, Trial Balance, Integration Queue), and active user profile.
+- Top financial metrics bar displaying live revenue totals, calculated VAT amounts, transmitted e-invoices, and trial balance differences.
+- Tabular numeric typography for financial precision and vertical decimal alignment.
+
+### Dual-Layer Data Deletion & Dynamic Recalculation
+- Outbox Invoice Deletion: each invoice row contains a prominent delete action; removal immediately recalculates billed revenue and VAT totals.
+- General Ledger Deletion: removing double-entry accounting records immediately updates general ledger debit/credit balances and trial balance variance.
+- LocalStorage persistence ensures purged invoices and ledger adjustments remain consistent upon refresh.
+
+### Session Persistence & Zero-Flicker Initialization
+- Preserves login session across browser refreshes via localStorage.
+- Zero-flicker inline authentication check prevents login modal flashes.
+- Clean sign-out action purges stored session tokens and restores the corporate login portal.
+- Pre-filled demo credentials with instant role switches (Chief Financial Officer, Certified Public Accountant, Client, User).
+
+### Bilingual Support (English | Turkish)
+- In-place language toggle switching tax identifiers, accounting charts of accounts, trial balance summaries, and modals without page reload.
+- Default language is English.
+
+---
+
+## Tech Stack
+
+| Layer | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Arayüz (UI)** | HTML5, Modern CSS3 | Koyu lacivert kurumsal ERP teması, responsive iki panelli modal |
-| **İş Mantığı** | Vanilla ES6+ JavaScript | Dinamik KDV/ciro matrah hesaplama, cari bakiye dengelemesi |
-| **İkonlar** | Bootstrap Icons v1.11.3 | Muhasebe ve finans sembolleri |
-| **Kalıcılık** | HTML5 `localStorage` | Fatura kuyruğu, yevmiye kayıtları, oturum durumu |
-| **Dağıtım** | Firebase Hosting | Yüksek performanslı SSL korumalı barındırma |
+| UI & Layout | HTML5, Modern CSS3 | Deep navy corporate ERP theme, responsive two-panel modal |
+| Business Logic | Vanilla ES6+ JavaScript | Dynamic VAT/revenue tax base recalculation, ledger balancing |
+| Icons | Bootstrap Icons v1.11.3 | Financial and accounting symbols |
+| Persistence | HTML5 localStorage | Invoices, ledger entries, session state |
+| Hosting | Firebase Hosting | High-performance SSL-encrypted hosting |
 
 ---
 
-## 📁 Proje Dizin Yapısı
+## Directory Structure
 
 ```
 FinFlow-ERP/
-├── index.html              # ERP terminali ve split login portalı
-├── docs/                   # Dokümantasyon ve ekran görüntüleri
-│   ├── preview-dashboard.png # Muhasebe terminali yüksek çözünürlüklü önizleme
-│   └── preview-login.png     # Two-Panel split giriş ekranı önizleme
-└── README.md               # Proje dokümantasyonu
+├── index.html              # Complete single-page application
+├── docs/                   # Documentation assets and screenshots
+│   ├── preview-dashboard.png # High-resolution terminal preview
+│   └── preview-login.png     # High-resolution login portal preview
+└── README.md               # Project documentation
 ```
 
 ---
 
-## ⚡ Hızlı Başlangıç (Local Setup)
+## Getting Started
 
-1. Depoyu klonlayın:
+1. Clone the repository:
    ```bash
    git clone https://github.com/kubrvk/FinFlow-ERP.git
    cd FinFlow-ERP
    ```
-2. `index.html` dosyasını tarayıcınızda açın:
+2. Open `index.html` directly in your browser:
    ```bash
    start index.html
    ```
-3. Alternatif yerel HTTP sunucusu ile çalıştırmak için:
+3. Alternatively, serve with any local HTTP server:
    ```bash
    npx serve .
    ```
-4. Tarayıcınızda açılan adrese gidin.
-   - *Giriş ekranını atlayıp doğrudan ERP terminalini açmak için:* `http://localhost:3000/?demo=1`
+4. Access `http://localhost:3000` in your browser.
+   - To bypass login and view the terminal directly: `http://localhost:3000/?demo=1`
 
 ---
 
-## 🌐 Canlı Sistem
+## Live System
 
-- **Canlı URL**: [https://finflow-erp.web.app](https://finflow-erp.web.app)
-- **Doğrudan Demo Bağlantısı**: [https://finflow-erp.web.app/?demo=1](https://finflow-erp.web.app/?demo=1)
+- Live URL: [https://finflow-erp.web.app](https://finflow-erp.web.app)
+- Direct Dashboard Link: [https://finflow-erp.web.app/?demo=1](https://finflow-erp.web.app/?demo=1)
 
 ---
 
-## 👤 Geliştirici
+## Author
 
-**Developed by Beraat Yetkin**
+Developed by Beraat Yetkin
 - GitHub: [@kubrvk](https://github.com/kubrvk)
-- Proje Deposu: [FinFlow-ERP](https://github.com/kubrvk/FinFlow-ERP)
-- Portfolyo: [Beraat Yetkin Portfolio](https://github.com/kubrvk/portfolio)
+- Repository: [FinFlow-ERP](https://github.com/kubrvk/FinFlow-ERP)
+- Portfolio: [Beraat Yetkin Portfolio](https://github.com/kubrvk/portfolio)
