@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinFlow ERP — Enterprise Finance, Ledger &amp; E-Invoice UBL Engine</title>
+  <meta name="description" content="FinFlow ERP: Corporate accounting platform featuring UBL 2.1 XML generation, general ledger reconciliation, and regulatory compliance. Developed by Beraat Yetkin.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%234338ca'/%3E%3Cpath d='M8 22V10l8-4 8 4v12l-8 4-8-4z' stroke='%23ffffff' stroke-width='2' fill='none'/%3E%3Cpath d='M16 6v20M8 10l8 4 8-4M8 16l8 4 8-4' stroke='%23a5b4fc' stroke-width='1.5' fill='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --primary: #4338ca;
+      --primary-hover: #3730a3;
+      --primary-subtle: #eef2ff;
+      --accent: #059669;
+      --accent-subtle: #ecfdf5;
+      --warning: #d97706;
+      --warning-subtle: #fffbeb;
+      --danger: #dc2626;
+      --danger-subtle: #fef2f2;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 10px 25px -3px rgba(15, 23, 42, 0.12);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .header-center {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--primary-subtle);
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--primary);
+      font-weight: 600;
+      border: 1px solid #c7d2fe;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.95rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: #fff; border-color: var(--border-strong); color: var(--text); }
+    .btn-outline:hover { background: #f1f5f9; border-color: #94a3b8; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #047857; }
+    .btn-sm { padding: 0.35rem 0.65rem; font-size: 0.8rem; }
+
+    .lang-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--primary-subtle);
+      border: 1px solid #c7d2fe;
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-muted);
+      user-select: none;
+      transition: all 0.15s ease;
+    }
+    .lang-toggle:hover { background: #e0e7ff; }
+    .lang-toggle span.active { color: var(--primary); font-weight: 800; }
+
+    .nav-tabs-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      gap: 1.5rem;
+    }
+    .tab-btn {
+      padding: 0.85rem 0.2rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 1320px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.55rem 0.8rem;
+      border: 1px solid var(--border-strong);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.12);
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 860px) {
+      .form-grid-3 { grid-template-columns: 1fr; }
+    }
+
+    .item-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin-bottom: 1rem;
+    }
+    .item-table th {
+      background: #f8fafc;
+      padding: 0.65rem 0.8rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .item-table td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      width: 320px;
+      margin-left: auto;
+      font-size: 0.9rem;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    .summary-row.total {
+      border-top: 2px solid var(--border-strong);
+      padding-top: 0.6rem;
+      margin-top: 0.6rem;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .code-box {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      padding: 1.25rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      max-height: 480px;
+    }
+
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.active { display: flex; }
+    .modal-card {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 650px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+    }
+    .modal-body { padding: 1.5rem; overflow-y: auto; }
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+      background: #f8fafc;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .badge-balanced { background: var(--accent-subtle); color: var(--accent); border: 1px solid #a7f3d0; }
+    .badge-diff { background: var(--danger-subtle); color: var(--danger); border: 1px solid #fecaca; }
+    .badge-transmitted { background: var(--primary-subtle); color: var(--primary); border: 1px solid #c7d2fe; }
+
+    footer {
+      background: #fff;
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0f172a;
+      color: #fff;
+      padding: 0.85rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      z-index: 2000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <a href="index.html" class="brand">
+      <div class="brand-icon"><i class="bi bi-receipt-cutoff"></i></div>
+      <div>
+        <span>FinFlow ERP</span>
+        <span id="brandSub" style="font-size:0.75rem;font-weight:500;color:var(--text-muted);display:block;margin-top:-3px;">Kurumsal Defter &amp; Mevzuata Uygun UBL Motoru</span>
+      </div>
+    </a>
+
+    <div class="header-center">
+      <span class="status-dot"></span>
+      <span id="headerStatus">UBL 2.1 &amp; Peppol BIS Billing 3.0 Schematron Doğrulaması Aktif</span>
+    </div>
+
+    <div class="header-right">
+      <div class="lang-toggle" onclick="toggleLanguage()">
+        <span id="langTr" class="active">TR</span>
+        <span style="opacity:0.4;">|</span>
+        <span id="langEn">EN</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;">
+        <i class="bi bi-person-circle" style="font-size:1.3rem;color:var(--primary);"></i>
+        <span id="userNameText" style="font-weight:600;">Finans Müdürü</span>
+        <span id="userRoleText" style="font-size:0.75rem;background:#e2e8f0;padding:0.15rem 0.45rem;border-radius:4px;color:#475569;">CFO &amp; Denetçi</span>
+      </div>
+      <button class="btn btn-outline btn-sm" onclick="openAuthModal()" id="btnSwitchRole">
+        <i class="bi bi-box-arrow-in-right"></i> <span id="lblSwitchRole">Rol Değiştir</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs-bar">
+    <button class="tab-btn active" onclick="switchTab('invoice', this)" id="tabBtnInvoice">
+      <i class="bi bi-file-earmark-code"></i> <span id="lblTabInvoice">E-Fatura UBL 2.1 Stüdyosu</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('ledger', this)" id="tabBtnLedger">
+      <i class="bi bi-book-half"></i> <span id="lblTabLedger">Genel Defter &amp; Banka Mutabakatı</span>
+    </button>
+    <button class="tab-btn" onclick="switchTab('outbox', this)" id="tabBtnOutbox">
+      <i class="bi bi-send-check"></i> <span id="lblTabOutbox">İletilen Faturalar</span> (<span id="outboxCount">8</span>)
+    </button>
+  </div>
+
+  <main>
+    <!-- TAB 1: E-Invoice UBL 2.1 Studio -->
+    <div id="tab-invoice" class="tab-pane">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" id="compilerTitle"><i class="bi bi-pencil-square text-primary"></i> E-Fatura &amp; E-Arşiv XML Derleyici</h2>
+            <div id="compilerDesc" style="font-size:0.85rem;color:var(--text-muted);margin-top:0.2rem;">Canlı UBL 2.1 standartlarında XML üretimi, KDV oran ayrıştırması ve Schematron doğrulaması.</div>
+          </div>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="loadSampleData()" id="btnReset">
+              <i class="bi bi-arrow-counterclockwise"></i> <span id="lblReset">Sıfırla</span>
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="generateXML()" id="btnCompile">
+              <i class="bi bi-code-slash"></i> <span id="lblCompile">UBL XML Derle</span>
+            </button>
+            <button class="btn btn-accent btn-sm" onclick="openPdfModal()" id="btnPdf">
+              <i class="bi bi-printer"></i> <span id="lblPdf">Resmi PDF Fatura</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label class="form-label" id="lblBuyer">Müşteri / Alıcı Kurumsal Unvan</label>
+            <input type="text" class="form-control" id="buyerName" value="Kurumsal Müşteri &amp; Taşımacılık A.Ş.">
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lblTaxId">Vergi Kimlik No (VKN)</label>
+            <input type="text" class="form-control" id="buyerTaxId" value="9480193821">
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lblProfile">Fatura Senaryosu</label>
+            <select class="form-control" id="invoiceProfile">
+              <option value="TICARIFATURA">TICARIFATURA (Ticari Senaryo)</option>
+              <option value="TEMELFATURA">TEMELFATURA (Temel Fatura)</option>
+              <option value="EARSIVFATURA">EARSIVFATURA (Elektronik Arşiv)</option>
+              <option value="IHRACAT">IHRACAT (Gümrük İhracat)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Line Items -->
+        <h3 id="lblLineItemsHeading" style="font-size:0.95rem;font-weight:700;margin:1rem 0 0.5rem 0;">Fatura Mal &amp; Hizmet Kalemleri</h3>
+        <table class="item-table">
+          <thead>
+            <tr>
+              <th style="width:40%;" id="thLineDesc">Kalem Açıklaması</th>
+              <th style="width:15%;" id="thLineQty">Miktar</th>
+              <th style="width:20%;" id="thLinePrice">Birim Fiyat ($)</th>
+              <th style="width:15%;" id="thLineTax">KDV Oranı</th>
+              <th style="width:10%;text-align:right;" id="thLineAction">Sil</th>
+            </tr>
+          </thead>
+          <tbody id="lineItemsBody"></tbody>
+        </table>
+
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+          <button class="btn btn-outline btn-sm" onclick="addLineItem()" id="btnAddLine">
+            <i class="bi bi-plus-lg"></i> <span id="lblAddLine">Satır Ekle</span>
+          </button>
+
+          <div class="summary-box">
+            <div class="summary-row">
+              <span style="color:var(--text-muted);" id="lblSubtotal">Ara Toplam:</span>
+              <strong id="summarySubtotal">$0.00</strong>
+            </div>
+            <div class="summary-row">
+              <span style="color:var(--text-muted);" id="lblTax">Hesaplanan KDV:</span>
+              <strong id="summaryTax">$0.00</strong>
+            </div>
+            <div class="summary-row total">
+              <span id="lblTotal">Ödenecek Tutar:</span>
+              <span id="summaryTotal">$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generated UBL XML Output -->
+      <div class="card" id="xmlCard">
+        <div class="card-header">
+          <h3 class="card-title" id="lblXmlCardTitle"><i class="bi bi-file-earmark-code"></i> Derlenen UBL 2.1 XML Standardı</h3>
+          <div style="display:flex;gap:0.5rem;">
+            <button class="btn btn-outline btn-sm" onclick="copyXmlCode()" id="btnCopyXml"><i class="bi bi-clipboard"></i> <span id="lblCopyXml">XML Kopyala</span></button>
+            <button class="btn btn-accent btn-sm" onclick="transmitInvoice()" id="btnTransmit"><i class="bi bi-send"></i> <span id="lblTransmit">GİB / Peppol Gateway'e Gönder</span></button>
+          </div>
+        </div>
+        <pre class="code-box" id="xmlViewer">UBL XML derlemesi için yukarıdaki butona basınız...</pre>
+      </div>
+    </div>
+
+    <!-- TAB 2: General Ledger -->
+    <div id="tab-ledger" class="tab-pane" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" id="lblLedgerTitle"><i class="bi bi-bank text-primary"></i> Genel Defter &amp; Banka Ekstre Mutabakatı</h2>
+            <div id="lblLedgerDesc" style="font-size:0.85rem;color:var(--text-muted);margin-top:0.2rem;">Banka hesap ekstreleri ile ERP çift taraflı kayıt denetimi.</div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="autoReconcileAll()" id="btnReconcileAll"><i class="bi bi-magic"></i> <span id="lblReconcileAll">Tümünü Mutabakatla</span></button>
+        </div>
+
+        <table class="item-table">
+          <thead>
+            <tr>
+              <th id="thLedgerAccount">Hesap Kodu &amp; Adı</th>
+              <th id="thLedgerErp">ERP Defter Bakiyesi</th>
+              <th id="thLedgerBank">Banka Ekstre Bakiyesi</th>
+              <th id="thLedgerDiff">Fark</th>
+              <th id="thLedgerStatus">Durum</th>
+              <th style="text-align:right;" id="thLedgerAction">İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="ledgerTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- TAB 3: Transmitted Outbox -->
+    <div id="tab-outbox" class="tab-pane" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title" id="lblOutboxTitle"><i class="bi bi-cloud-check text-primary"></i> İletilen Faturalar &amp; GİB Makbuzları</h2>
+            <div id="lblOutboxDesc" style="font-size:0.85rem;color:var(--text-muted);margin-top:0.2rem;">Gelir İdaresi Başkanlığı onaylı resmi e-fatura teslim kayıtları.</div>
+          </div>
+        </div>
+
+        <table class="item-table">
+          <thead>
+            <tr>
+              <th id="thOutboxUuid">Fatura UUID</th>
+              <th id="thOutboxRecipient">Alıcı Kurum</th>
+              <th id="thOutboxAmount">Toplam Tutar</th>
+              <th id="thOutboxTime">Zaman</th>
+              <th id="thOutboxStatus">Entegratör Durumu</th>
+              <th style="text-align:right;" id="thOutboxAction">İşlem</th>
+            </tr>
+          </thead>
+          <tbody id="outboxTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- PDF Invoice Preview Modal -->
+  <div class="modal-backdrop" id="pdfModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem;font-weight:700;" id="pdfModalTitle"><i class="bi bi-receipt"></i> Resmi E-Fatura Belge Önizlemesi</h3>
+        <button style="border:none;background:none;font-size:1.2rem;cursor:pointer;" onclick="closePdfModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="invoicePrintArea">
+        <div style="border-bottom:2px solid #0f172a;padding-bottom:1rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:flex-start;">
+          <div>
+            <h1 style="font-size:1.4rem;font-weight:800;color:var(--primary);margin-bottom:0.2rem;">FINFLOW E-FATURA</h1>
+            <div style="font-size:0.8rem;color:var(--text-muted);">VKN: 3940192841 &bull; Büyük Mükellefler Vergi Dairesi</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:var(--font-mono);font-weight:700;font-size:1rem;color:var(--text);" id="pdfInvNumber">INV-2026-00912</div>
+            <div style="font-size:0.8rem;color:var(--text-muted);">Tarih: 2026-09-21</div>
+            <span class="badge badge-transmitted" style="margin-top:0.4rem;">GİB E-ARŞİV</span>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+          <div style="background:#f8fafc;padding:1rem;border-radius:6px;font-size:0.85rem;">
+            <strong style="color:var(--text-muted);display:block;margin-bottom:0.3rem;" id="pdfLblBuyer">SAYIN (ALICI):</strong>
+            <div style="font-weight:700;" id="pdfBuyer">Kurumsal Müşteri A.Ş.</div>
+            <div id="pdfTaxId">VKN: 9480193821</div>
+          </div>
+          <div style="background:#f8fafc;padding:1rem;border-radius:6px;font-size:0.85rem;">
+            <strong style="color:var(--text-muted);display:block;margin-bottom:0.3rem;" id="pdfLblPayment">ÖDEME BİLGİSİ:</strong>
+            <div><strong id="pdfLblCurrency">Para Birimi:</strong> USD ($)</div>
+            <div><strong id="pdfLblTerm">Vade:</strong> 30 Gün</div>
+          </div>
+        </div>
+
+        <table class="item-table" style="font-size:0.85rem;">
+          <thead>
+            <tr>
+              <th id="pdfThDesc">Açıklama</th>
+              <th id="pdfThQty">Miktar</th>
+              <th id="pdfThPrice">Fiyat</th>
+              <th id="pdfThTax">KDV</th>
+              <th style="text-align:right;" id="pdfThTotal">Tutar</th>
+            </tr>
+          </thead>
+          <tbody id="pdfItemsList"></tbody>
+        </table>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:1rem;">
+          <div style="width:260px;font-size:0.88rem;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+              <span id="pdfLblSub">Ara Toplam:</span>
+              <strong id="pdfSubtotal">$0.00</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;">
+              <span id="pdfLblTax">KDV Tutarı:</span>
+              <strong id="pdfTax">$0.00</strong>
+            </div>
+            <div style="display:flex;justify-content:space-between;border-top:1px solid #cbd5e1;padding-top:0.4rem;font-size:1.1rem;font-weight:800;color:var(--primary);">
+              <span id="pdfLblTot">Genel Toplam:</span>
+              <span id="pdfTotal">$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closePdfModal()" id="pdfBtnClose">Kapat</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()" id="pdfBtnPrint"><i class="bi bi-printer"></i> Yazdır</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Role / Auth Modal -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal-card" style="max-width:480px;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem;font-weight:700;" id="authModalTitle"><i class="bi bi-people"></i> Kurumsal Finans Rol Seçimi</h3>
+        <button style="border:none;background:none;font-size:1.2rem;cursor:pointer;" onclick="closeAuthModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;" id="authModalDesc">
+          Finans panelinde işlem yapmak için aktif rol seçiniz:
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+          <div class="btn btn-outline" style="justify-content:flex-start;" onclick="setRoleByPreset(0)">
+            <i class="bi bi-person-gear" style="color:var(--primary);font-size:1.1rem;"></i>
+            <div id="roleOpt0"><strong>Finans Müdürü</strong> &bull; CFO &amp; Mali Kontrolör</div>
+          </div>
+          <div class="btn btn-outline" style="justify-content:flex-start;" onclick="setRoleByPreset(1)">
+            <i class="bi bi-file-earmark-check" style="color:var(--accent);font-size:1.1rem;"></i>
+            <div id="roleOpt1"><strong>Mali Müşavir</strong> &bull; Vergi &amp; UBL Şema Denetçisi</div>
+          </div>
+          <div class="btn btn-outline" style="justify-content:flex-start;" onclick="setRoleByPreset(2)">
+            <i class="bi bi-building" style="color:#f59e0b;font-size:1.1rem;"></i>
+            <div id="roleOpt2"><strong>Müşteri</strong> &bull; Fatura Alıcısı Kurumsal Temsilci</div>
+          </div>
+          <div class="btn btn-outline" style="justify-content:flex-start;" onclick="setRoleByPreset(3)">
+            <i class="bi bi-wallet2" style="color:#64748b;font-size:1.1rem;"></i>
+            <div id="roleOpt3"><strong>Kullanıcı</strong> &bull; Cari Hesap &amp; Fatura Operatörü</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeAuthModal()" id="authBtnClose">Kapat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Strict Standard Footer -->
+  <footer>
+    <div>Developed by Beraat Yetkin</div>
+    <div>
+      <a href="https://github.com/kubrvk/FinFlow-ERP" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-github"></i> GitHub
+      </a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toastMsg">
+    <i class="bi bi-check-circle-fill" style="color:#10b981;"></i>
+    <span id="toastText">İşlem başarılı.</span>
+  </div>
+
+  <script>
+    let currentLang = localStorage.getItem('ff_lang') || 'tr';
+
+    const i18n = {
+      tr: {
+        brandSub: "Kurumsal Defter & Mevzuata Uygun UBL Motoru",
+        headerStatus: "UBL 2.1 & Peppol BIS Billing 3.0 Schematron Doğrulaması Aktif",
+        switchRole: "Rol Değiştir",
+        tabInvoice: "E-Fatura UBL 2.1 Stüdyosu",
+        tabLedger: "Genel Defter & Banka Mutabakatı",
+        tabOutbox: "İletilen Faturalar",
+        compilerTitle: "E-Fatura & E-Arşiv XML Derleyici",
+        compilerDesc: "Canlı UBL 2.1 standartlarında XML üretimi, KDV oran ayrıştırması ve Schematron doğrulaması.",
+        btnReset: "Sıfırla",
+        btnCompile: "UBL XML Derle",
+        btnPdf: "Resmi PDF Fatura",
+        buyerLabel: "Müşteri / Alıcı Kurumsal Unvan",
+        taxIdLabel: "Vergi Kimlik No (VKN)",
+        profileLabel: "Fatura Senaryosu",
+        lineItemsTitle: "Fatura Mal & Hizmet Kalemleri",
+        thDesc: "Kalem Açıklaması",
+        thQty: "Miktar",
+        thPrice: "Birim Fiyat ($)",
+        thTax: "KDV Oranı",
+        thAction: "Sil",
+        btnAddLine: "Satır Ekle",
+        lblSubtotal: "Ara Toplam:",
+        lblTax: "Hesaplanan KDV:",
+        lblTotal: "Ödenecek Tutar:",
+        xmlCardTitle: "Derlenen UBL 2.1 XML Standardı",
+        btnCopyXml: "XML Kopyala",
+        btnTransmit: "GİB / Peppol Gateway'e Gönder",
+        ledgerTitle: "Genel Defter & Banka Ekstre Mutabakatı",
+        ledgerDesc: "Banka hesap ekstreleri ile ERP çift taraflı kayıt denetimi.",
+        btnReconcileAll: "Tümünü Mutabakatla",
+        thAccount: "Hesap Kodu & Adı",
+        thLedgerBal: "ERP Defter Bakiyesi",
+        thBankBal: "Banka Ekstre Bakiyesi",
+        thDiff: "Fark",
+        thStatus: "Durum",
+        thReconcile: "İşlem",
+        outboxTitle: "İletilen Faturalar & GİB Makbuzları",
+        outboxDesc: "Gelir İdaresi Başkanlığı onaylı resmi e-fatura teslim kayıtları.",
+        thUuid: "Fatura UUID",
+        thRecipient: "Alıcı Kurum",
+        thAmount: "Toplam Tutar",
+        thTime: "Zaman",
+        thGatewayStatus: "Entegratör Durumu",
+        btnReconcile: "Eşitle",
+        statusBalanced: "Mutabık",
+        statusDiscrepancy: "Fark Var",
+        authTitle: "Kurumsal Finans Rol Seçimi",
+        authDesc: "Finans panelinde işlem yapmak için aktif rol seçiniz:",
+        btnClose: "Kapat",
+        btnPrint: "Yazdır",
+        pdfTitle: "Resmi E-Fatura Belge Önizlemesi",
+        pdfBuyer: "SAYIN (ALICI):",
+        pdfPayment: "ÖDEME BİLGİSİ:",
+        pdfCurrency: "Para Birimi:",
+        pdfTerm: "Vade: 30 Gün",
+        pdfSub: "Ara Toplam:",
+        pdfVat: "KDV Tutarı:",
+        pdfTot: "Genel Toplam:",
+        toastXmlCompiled: "UBL 2.1 XML başarıyla derlendi.",
+        toastXmlCopied: "XML panoya kopyalandı.",
+        toastTransmitted: "Fatura GİB Gateway'e iletildi:",
+        toastReconciled: "Hesap mutabakatı sağlandı.",
+        toastAllReconciled: "Tüm hesaplar mutabakatlandı.",
+        toastActiveRole: "Aktif Rol:",
+        toastReset: "Varsayılan veriler yüklendi.",
+        toastLineAdded: "Fatura kalemi eklendi.",
+        toastMinLine: "Fatura en az bir kalem içermelidir."
+      },
+      en: {
+        brandSub: "Enterprise Ledger & Regulatory UBL Engine",
+        headerStatus: "UBL 2.1 & Peppol BIS Billing 3.0 Schematron Certified",
+        switchRole: "Switch Role",
+        tabInvoice: "E-Invoice UBL 2.1 Studio",
+        tabLedger: "General Ledger & Bank Reconciliation",
+        tabOutbox: "Transmitted Invoices",
+        compilerTitle: "E-Invoice & E-Archive XML Compiler",
+        compilerDesc: "Real-time UBL 2.1 compliant XML generation, tax breakdown, and Schematron validation.",
+        btnReset: "Reset",
+        btnCompile: "Compile UBL XML",
+        btnPdf: "Official PDF Invoice",
+        buyerLabel: "Customer / Buyer Corporate Entity",
+        taxIdLabel: "Tax Identification Number (TIN/VKN)",
+        profileLabel: "Invoice Profile / Scenario",
+        lineItemsTitle: "Invoice Goods & Service Lines",
+        thDesc: "Line Description",
+        thQty: "Quantity",
+        thPrice: "Unit Price ($)",
+        thTax: "VAT Rate",
+        thAction: "Delete",
+        btnAddLine: "Add Line Item",
+        lblSubtotal: "Subtotal:",
+        lblTax: "Calculated VAT:",
+        lblTotal: "Total Payable:",
+        xmlCardTitle: "Compiled UBL 2.1 XML Standard",
+        btnCopyXml: "Copy XML",
+        btnTransmit: "Transmit to GIB / Peppol Gateway",
+        ledgerTitle: "General Ledger & Bank Statement Reconciliation",
+        ledgerDesc: "Bank statement synchronization with double-entry ERP accounting.",
+        btnReconcileAll: "Auto-Reconcile All",
+        thAccount: "Account Code & Name",
+        thLedgerBal: "ERP Ledger Balance",
+        thBankBal: "Bank Statement Balance",
+        thDiff: "Difference",
+        thStatus: "Status",
+        thReconcile: "Action",
+        outboxTitle: "Transmitted Invoices & Gateway Receipts",
+        outboxDesc: "Official tax authority transmission logs & timestamp receipts.",
+        thUuid: "Invoice UUID",
+        thRecipient: "Recipient Organization",
+        thAmount: "Total Amount",
+        thTime: "Timestamp",
+        thGatewayStatus: "Gateway Status",
+        btnReconcile: "Match",
+        statusBalanced: "Balanced",
+        statusDiscrepancy: "Discrepancy",
+        authTitle: "Select Corporate Finance Role",
+        authDesc: "Choose an active operational role for the finance console:",
+        btnClose: "Close",
+        btnPrint: "Print",
+        pdfTitle: "Official E-Invoice Document Preview",
+        pdfBuyer: "BUYER / RECIPIENT:",
+        pdfPayment: "PAYMENT TERMS:",
+        pdfCurrency: "Currency:",
+        pdfTerm: "Terms: Net 30 Days",
+        pdfSub: "Subtotal:",
+        pdfVat: "VAT Total:",
+        pdfTot: "Grand Total:",
+        toastXmlCompiled: "UBL 2.1 XML compiled successfully.",
+        toastXmlCopied: "XML copied to clipboard.",
+        toastTransmitted: "Invoice transmitted to Gateway:",
+        toastReconciled: "Account reconciliation verified.",
+        toastAllReconciled: "All accounts synchronized.",
+        toastActiveRole: "Active Role:",
+        toastReset: "Default dataset restored.",
+        toastLineAdded: "Line item added.",
+        toastMinLine: "Invoice must contain at least one line."
+      }
+    };
+
+    const rolePresets = [
+      { trName: 'Finans Müdürü', trRole: 'CFO & Denetçi', enName: 'Finance Manager', enRole: 'CFO & Auditor' },
+      { trName: 'Mali Müşavir', trRole: 'Yeminli Denetçi', enName: 'Certified Auditor', enRole: 'Tax & Compliance Lead' },
+      { trName: 'Müşteri', trRole: 'Kurumsal Müşteri', enName: 'Client Representative', enRole: 'Enterprise Buyer' },
+      { trName: 'Kullanıcı', trRole: 'Muhasebe Uzmanı', enName: 'Finance User', enRole: 'Operations Analyst' }
+    ];
+
+    let currentRoleIndex = parseInt(localStorage.getItem('ff_role_idx') || '0', 10);
+    if (isNaN(currentRoleIndex) || currentRoleIndex < 0 || currentRoleIndex > 3) currentRoleIndex = 0;
+
+    let lineItems = [
+      { desc_tr: 'Bulut Altyapısı & Kurumsal API Sunucu Hizmeti', desc_en: 'Cloud Infrastructure & Enterprise API Compute', qty: 1, price: 4200.00, tax: 20 },
+      { desc_tr: 'Veritabanı Kümeleme & Yüksek Erişilebilirlik Desteği', desc_en: 'Database Clustering & High Availability Setup', qty: 3, price: 1850.00, tax: 20 },
+      { desc_tr: 'UBL 2.1 Schematron Entegrasyon Danışmanlığı', desc_en: 'UBL 2.1 Schematron Integration Consulting', qty: 1, price: 2900.00, tax: 10 },
+      { desc_tr: 'Felaket Kurtarma & Coğrafi Veri Yedekleme Hizmeti', desc_en: 'Disaster Recovery & Geo-Redundant Backup Service', qty: 2, price: 1250.00, tax: 20 }
+    ];
+
+    let defaultLedger = [
+      { code: '100.01', name_tr: 'Merkez Kasa (Nakit USD)', name_en: 'Central Cash (Physical USD)', ledger: 32450.00, bank: 32450.00, status: 'Balanced' },
+      { code: '102.01', name_tr: 'Ticari Vadesiz Mevduat Hesabı', name_en: 'Commercial Demand Deposit', ledger: 482910.00, bank: 482910.00, status: 'Balanced' },
+      { code: '102.02', name_tr: 'Uluslararası Takas & Swift Hesabı', name_en: 'International Swift Clearing Account', ledger: 271400.00, bank: 271400.00, status: 'Balanced' },
+      { code: '120.04', name_tr: 'Alıcılar (Lojistik Müşterileri Carisi)', name_en: 'Accounts Receivable (Logistics Clients)', ledger: 154200.50, bank: 154200.50, status: 'Balanced' },
+      { code: '191.20', name_tr: 'İndirilecek KDV Hesabı (%20)', name_en: 'Deductible Input VAT (20%)', ledger: 43280.00, bank: 43280.00, status: 'Balanced' },
+      { code: '320.10', name_tr: 'Satıcılar (Veri Merkezi Lisans Borçları)', name_en: 'Accounts Payable (Datacenter & Cloud)', ledger: 68400.00, bank: 69100.00, status: 'Discrepancy' },
+      { code: '335.01', name_tr: 'Personele Borçlar & Maaş Tahakkukları', name_en: 'Payroll & Employee Payables Accrual', ledger: 112500.00, bank: 112500.00, status: 'Balanced' },
+      { code: '360.01', name_tr: 'Ödenecek Vergi ve Fonlar (Muhtasar)', name_en: 'Taxes & Regulatory Withholdings Payable', ledger: 28940.00, bank: 28940.00, status: 'Balanced' },
+      { code: '391.20', name_tr: 'Hesaplanan KDV Takas Hesabı (%20)', name_en: 'Calculated Output VAT Account (20%)', ledger: 84920.00, bank: 84920.00, status: 'Balanced' }
+    ];
+
+    let ledgerAccounts = JSON.parse(localStorage.getItem('ff_ledger_v2')) || defaultLedger;
+
+    let defaultOutbox = [
+      { uuid: '9fa81902-8321-4f1e-9201-492049182341', recipient: 'Kurumsal Müşteri A.Ş.', amount: '$15,180.00', time: '2026-09-21 09:14', status: 'GİB ONAYLANDI' },
+      { uuid: '3ba72019-9128-4019-bca1-819203948192', recipient: 'Avrupa Lojistik Ltd.', amount: '$8,450.00', time: '2026-09-20 16:30', status: 'PEPPOL İLETİLDİ' },
+      { uuid: '1ef92018-8472-4a01-9218-192847192039', recipient: 'Anadolu Enerji Dağıtım', amount: '$29,300.00', time: '2026-09-19 11:45', status: 'GİB ONAYLANDI' },
+      { uuid: '4dc81029-7711-482b-8102-182903847102', recipient: 'Bilişim Altyapı Çözümleri A.Ş.', amount: '$42,500.00', time: '2026-09-18 14:20', status: 'GİB ONAYLANDI' },
+      { uuid: '7aa91028-2281-492c-9018-771928401928', recipient: 'Kuzey Liman İşletmeleri', amount: '$19,850.00', time: '2026-09-17 10:15', status: 'PEPPOL İLETİLDİ' },
+      { uuid: '8bb10928-3392-411d-a102-882910294810', recipient: 'Marmara Deniz Nakliyat', amount: '$6,200.00', time: '2026-09-16 17:50', status: 'GİB ONAYLANDI' },
+      { uuid: '5ee01928-4403-422e-b213-993021305921', recipient: 'Endüstriyel Robotik Sistemler', amount: '$54,900.00', time: '2026-09-15 13:05', status: 'GİB ONAYLANDI' },
+      { uuid: '2ff91827-5514-433f-c324-004132416032', recipient: 'Küresel Kimya Teknolojileri', amount: '$11,720.00', time: '2026-09-14 08:40', status: 'PEPPOL İLETİLDİ' }
+    ];
+
+    let outboxItems = JSON.parse(localStorage.getItem('ff_outbox_v2')) || defaultOutbox;
+
+    function toggleLanguage() {
+      currentLang = (currentLang === 'tr') ? 'en' : 'tr';
+      localStorage.setItem('ff_lang', currentLang);
+      applyLanguage(currentLang);
+    }
+
+    function applyLanguage(lang) {
+      document.documentElement.lang = lang;
+      const dict = i18n[lang] || i18n.tr;
+
+      document.getElementById('langTr').className = (lang === 'tr') ? 'active' : '';
+      document.getElementById('langEn').className = (lang === 'en') ? 'active' : '';
+
+      // Header & Tabs
+      document.getElementById('brandSub').textContent = dict.brandSub;
+      document.getElementById('headerStatus').textContent = dict.headerStatus;
+      document.getElementById('lblSwitchRole').textContent = dict.switchRole;
+      document.getElementById('lblTabInvoice').textContent = dict.tabInvoice;
+      document.getElementById('lblTabLedger').textContent = dict.tabLedger;
+      document.getElementById('lblTabOutbox').textContent = dict.tabOutbox;
+
+      // Tab 1
+      document.getElementById('compilerTitle').innerHTML = `<i class="bi bi-pencil-square text-primary"></i> ${dict.compilerTitle}`;
+      document.getElementById('compilerDesc').textContent = dict.compilerDesc;
+      document.getElementById('lblReset').textContent = dict.btnReset;
+      document.getElementById('lblCompile').textContent = dict.btnCompile;
+      document.getElementById('lblPdf').textContent = dict.btnPdf;
+      document.getElementById('lblBuyer').textContent = dict.buyerLabel;
+      document.getElementById('lblTaxId').textContent = dict.taxIdLabel;
+      document.getElementById('lblProfile').textContent = dict.profileLabel;
+      document.getElementById('lblLineItemsHeading').textContent = dict.lineItemsTitle;
+      document.getElementById('thLineDesc').textContent = dict.thDesc;
+      document.getElementById('thLineQty').textContent = dict.thQty;
+      document.getElementById('thLinePrice').textContent = dict.thPrice;
+      document.getElementById('thLineTax').textContent = dict.thTax;
+      document.getElementById('thLineAction').textContent = dict.thAction;
+      document.getElementById('lblAddLine').textContent = dict.btnAddLine;
+      document.getElementById('lblSubtotal').textContent = dict.lblSubtotal;
+      document.getElementById('lblTax').textContent = dict.lblTax;
+      document.getElementById('lblTotal').textContent = dict.lblTotal;
+      document.getElementById('lblXmlCardTitle').innerHTML = `<i class="bi bi-file-earmark-code"></i> ${dict.xmlCardTitle}`;
+      document.getElementById('lblCopyXml').textContent = dict.btnCopyXml;
+      document.getElementById('lblTransmit').textContent = dict.btnTransmit;
+
+      // Tab 2
+      document.getElementById('lblLedgerTitle').innerHTML = `<i class="bi bi-bank text-primary"></i> ${dict.ledgerTitle}`;
+      document.getElementById('lblLedgerDesc').textContent = dict.ledgerDesc;
+      document.getElementById('lblReconcileAll').textContent = dict.btnReconcileAll;
+      document.getElementById('thLedgerAccount').textContent = dict.thAccount;
+      document.getElementById('thLedgerErp').textContent = dict.thLedgerBal;
+      document.getElementById('thLedgerBank').textContent = dict.thBankBal;
+      document.getElementById('thLedgerDiff').textContent = dict.thDiff;
+      document.getElementById('thLedgerStatus').textContent = dict.thStatus;
+      document.getElementById('thLedgerAction').textContent = dict.thReconcile;
+
+      // Tab 3
+      document.getElementById('lblOutboxTitle').innerHTML = `<i class="bi bi-cloud-check text-primary"></i> ${dict.outboxTitle}`;
+      document.getElementById('lblOutboxDesc').textContent = dict.outboxDesc;
+      document.getElementById('thOutboxUuid').textContent = dict.thUuid;
+      document.getElementById('thOutboxRecipient').textContent = dict.thRecipient;
+      document.getElementById('thOutboxAmount').textContent = dict.thAmount;
+      document.getElementById('thOutboxTime').textContent = dict.thTime;
+      document.getElementById('thOutboxStatus').textContent = dict.thGatewayStatus;
+      document.getElementById('thOutboxAction').textContent = dict.thAction;
+
+      // Modals
+      document.getElementById('authModalTitle').innerHTML = `<i class="bi bi-people"></i> ${dict.authTitle}`;
+      document.getElementById('authModalDesc').textContent = dict.authDesc;
+      document.getElementById('authBtnClose').textContent = dict.btnClose;
+      document.getElementById('pdfModalTitle').innerHTML = `<i class="bi bi-receipt"></i> ${dict.pdfTitle}`;
+      document.getElementById('pdfBtnClose').textContent = dict.btnClose;
+      document.getElementById('pdfBtnPrint').innerHTML = `<i class="bi bi-printer"></i> ${dict.btnPrint}`;
+
+      // Update Role Display
+      const preset = rolePresets[currentRoleIndex];
+      document.getElementById('userNameText').textContent = (lang === 'tr') ? preset.trName : preset.enName;
+      document.getElementById('userRoleText').textContent = (lang === 'tr') ? preset.trRole : preset.enRole;
+
+      // Re-render Views
+      renderLineItems();
+      renderLedger();
+      renderOutbox();
+      generateXML();
+    }
+
+    function saveState() {
+      localStorage.setItem('ff_role_idx', currentRoleIndex.toString());
+      localStorage.setItem('ff_ledger_v2', JSON.stringify(ledgerAccounts));
+      localStorage.setItem('ff_outbox_v2', JSON.stringify(outboxItems));
+      document.getElementById('outboxCount').textContent = outboxItems.length;
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById('toastMsg');
+      document.getElementById('toastText').textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(`tab-${tab}`).style.display = 'block';
+      if (btn) btn.classList.add('active');
+
+      if (tab === 'ledger') renderLedger();
+      if (tab === 'outbox') renderOutbox();
+    }
+
+    function renderLineItems() {
+      const tbody = document.getElementById('lineItemsBody');
+      tbody.innerHTML = '';
+      let subtotal = 0;
+      let totalTax = 0;
+
+      lineItems.forEach((item, index) => {
+        const lineTotal = item.qty * item.price;
+        const lineTax = lineTotal * (item.tax / 100);
+        subtotal += lineTotal;
+        totalTax += lineTax;
+
+        const desc = (currentLang === 'tr') ? (item.desc_tr || item.desc) : (item.desc_en || item.desc);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <input type="text" class="form-control" value="${desc}" onchange="updateItem(${index}, 'desc', this.value)">
+          </td>
+          <td>
+            <input type="number" min="1" class="form-control" value="${item.qty}" onchange="updateItem(${index}, 'qty', this.value)">
+          </td>
+          <td>
+            <input type="number" step="0.01" class="form-control" value="${item.price.toFixed(2)}" onchange="updateItem(${index}, 'price', this.value)">
+          </td>
+          <td>
+            <select class="form-control" onchange="updateItem(${index}, 'tax', this.value)">
+              <option value="20" ${item.tax === 20 ? 'selected' : ''}>%20 ${currentLang === 'tr' ? 'Standart' : 'Standard'}</option>
+              <option value="10" ${item.tax === 10 ? 'selected' : ''}>%10 ${currentLang === 'tr' ? 'İndirimli' : 'Reduced'}</option>
+              <option value="1" ${item.tax === 1 ? 'selected' : ''}>%1 ${currentLang === 'tr' ? 'Temel' : 'Base'}</option>
+              <option value="0" ${item.tax === 0 ? 'selected' : ''}>%0 ${currentLang === 'tr' ? 'İstisna' : 'Exempt'}</option>
+            </select>
+          </td>
+          <td style="text-align:right;">
+            <button class="btn btn-outline btn-sm" style="color:var(--danger);" onclick="deleteItem(${index})">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      const grandTotal = subtotal + totalTax;
+      document.getElementById('summarySubtotal').textContent = `$${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+      document.getElementById('summaryTax').textContent = `$${totalTax.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+      document.getElementById('summaryTotal').textContent = `$${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+    }
+
+    function addLineItem() {
+      const dict = i18n[currentLang] || i18n.tr;
+      lineItems.push({
+        desc_tr: 'Yeni Danışmanlık & Altyapı Hizmeti',
+        desc_en: 'New Advisory & Cloud Service Line',
+        qty: 1,
+        price: 1200.00,
+        tax: 20
+      });
+      renderLineItems();
+      showToast(dict.toastLineAdded);
+    }
+
+    function updateItem(index, field, value) {
+      if (field === 'qty') lineItems[index].qty = parseFloat(value) || 1;
+      else if (field === 'price') lineItems[index].price = parseFloat(value) || 0;
+      else if (field === 'tax') lineItems[index].tax = parseFloat(value) || 0;
+      else {
+        if (currentLang === 'tr') lineItems[index].desc_tr = value;
+        else lineItems[index].desc_en = value;
+      }
+      renderLineItems();
+    }
+
+    function deleteItem(index) {
+      const dict = i18n[currentLang] || i18n.tr;
+      if (lineItems.length <= 1) {
+        showToast(dict.toastMinLine);
+        return;
+      }
+      lineItems.splice(index, 1);
+      renderLineItems();
+    }
+
+    function loadSampleData() {
+      const dict = i18n[currentLang] || i18n.tr;
+      lineItems = [
+        { desc_tr: 'Bulut Altyapısı & Kurumsal API Sunucu Hizmeti', desc_en: 'Cloud Infrastructure & Enterprise API Compute', qty: 1, price: 4200.00, tax: 20 },
+        { desc_tr: 'Veritabanı Kümeleme & Yüksek Erişilebilirlik Desteği', desc_en: 'Database Clustering & High Availability Setup', qty: 3, price: 1850.00, tax: 20 },
+        { desc_tr: 'UBL 2.1 Schematron Entegrasyon Danışmanlığı', desc_en: 'UBL 2.1 Schematron Integration Consulting', qty: 1, price: 2900.00, tax: 10 },
+        { desc_tr: 'Felaket Kurtarma & Coğrafi Veri Yedekleme Hizmeti', desc_en: 'Disaster Recovery & Geo-Redundant Backup Service', qty: 2, price: 1250.00, tax: 20 }
+      ];
+      renderLineItems();
+      generateXML();
+      showToast(dict.toastReset);
+    }
+
+    function generateXML() {
+      const buyer = document.getElementById('buyerName').value;
+      const vkn = document.getElementById('buyerTaxId').value;
+      const profile = document.getElementById('invoiceProfile').value;
+      const uuid = 'urn:uuid:' + 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+
+      let subtotal = 0;
+      let totalTax = 0;
+      let lineXml = '';
+
+      lineItems.forEach((item, idx) => {
+        const lineTotal = item.qty * item.price;
+        const lineTax = lineTotal * (item.tax / 100);
+        subtotal += lineTotal;
+        totalTax += lineTax;
+        const desc = (currentLang === 'tr') ? (item.desc_tr || item.desc) : (item.desc_en || item.desc);
+
+        lineXml += `
+  <cac:InvoiceLine>
+    <cbc:ID>${idx + 1}</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="C62">${item.qty}</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="USD">${lineTotal.toFixed(2)}</cbc:LineExtensionAmount>
+    <cac:TaxTotal>
+      <cbc:TaxAmount currencyID="USD">${lineTax.toFixed(2)}</cbc:TaxAmount>
+    </cac:TaxTotal>
+    <cac:Item>
+      <cbc:Name>${desc}</cbc:Name>
+    </cac:Item>
+  </cac:InvoiceLine>`;
+      });
+
+      const grandTotal = subtotal + totalTax;
+
+      const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+         xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+         xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+  <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
+  <cbc:ProfileID>${profile}</cbc:ProfileID>
+  <cbc:ID>FFL2026000000912</cbc:ID>
+  <cbc:UUID>${uuid}</cbc:UUID>
+  <cbc:IssueDate>2026-09-21</cbc:IssueDate>
+  <cac:AccountingCustomerParty>
+    <cac:Party>
+      <cac:PartyIdentification><cbc:ID schemeID="VKN">${vkn}</cbc:ID></cac:PartyIdentification>
+      <cac:PartyName><cbc:Name>${buyer}</cbc:Name></cac:PartyName>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="USD">${subtotal.toFixed(2)}</cbc:LineExtensionAmount>
+    <cbc:PayableAmount currencyID="USD">${grandTotal.toFixed(2)}</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>${lineXml}
+</Invoice>`;
+
+      document.getElementById('xmlViewer').textContent = xml;
+    }
+
+    function copyXmlCode() {
+      const dict = i18n[currentLang] || i18n.tr;
+      navigator.clipboard.writeText(document.getElementById('xmlViewer').textContent).then(() => {
+        showToast(dict.toastXmlCopied);
+      });
+    }
+
+    function transmitInvoice() {
+      const dict = i18n[currentLang] || i18n.tr;
+      const buyer = document.getElementById('buyerName').value;
+      const subtotal = lineItems.reduce((s, i) => s + (i.qty * i.price), 0);
+      const tax = lineItems.reduce((s, i) => s + (i.qty * i.price * (i.tax / 100)), 0);
+      const total = subtotal + tax;
+
+      const newId = '9fa' + Math.random().toString(36).substring(2, 9) + '-8321-4f1e';
+      outboxItems.unshift({
+        uuid: newId,
+        recipient: buyer,
+        amount: `$${total.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+        time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        status: (currentLang === 'tr') ? 'GİB ONAYLANDI' : 'GIB APPROVED'
+      });
+      saveState();
+      renderOutbox();
+      showToast(`${dict.toastTransmitted} ${newId}`);
+    }
+
+    function renderLedger() {
+      const dict = i18n[currentLang] || i18n.tr;
+      const tbody = document.getElementById('ledgerTableBody');
+      tbody.innerHTML = '';
+
+      ledgerAccounts.forEach((acc, idx) => {
+        const diff = acc.ledger - acc.bank;
+        const isBalanced = Math.abs(diff) < 0.01;
+        const name = (currentLang === 'tr') ? (acc.name_tr || acc.name) : (acc.name_en || acc.name);
+        const statusLabel = isBalanced ? dict.statusBalanced : dict.statusDiscrepancy;
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${acc.code}</strong> &bull; ${name}</td>
+          <td style="font-family:var(--font-mono);">$${acc.ledger.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+          <td style="font-family:var(--font-mono);">$${acc.bank.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+          <td style="font-family:var(--font-mono);color:${isBalanced ? 'var(--accent)' : 'var(--danger)'};">
+            ${diff === 0 ? '$0.00' : (diff > 0 ? '+$' : '-$') + Math.abs(diff).toFixed(2)}
+          </td>
+          <td><span class="badge ${isBalanced ? 'badge-balanced' : 'badge-diff'}">${statusLabel}</span></td>
+          <td style="text-align:right;">
+            <button class="btn btn-outline btn-sm" onclick="reconcileItem(${idx})"><i class="bi bi-check2"></i> ${dict.btnReconcile}</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function reconcileItem(idx) {
+      const dict = i18n[currentLang] || i18n.tr;
+      ledgerAccounts[idx].bank = ledgerAccounts[idx].ledger;
+      ledgerAccounts[idx].status = 'Balanced';
+      saveState();
+      renderLedger();
+      showToast(dict.toastReconciled);
+    }
+
+    function autoReconcileAll() {
+      const dict = i18n[currentLang] || i18n.tr;
+      ledgerAccounts.forEach(a => a.bank = a.ledger);
+      saveState();
+      renderLedger();
+      showToast(dict.toastAllReconciled);
+    }
+
+    function renderOutbox() {
+      const tbody = document.getElementById('outboxTableBody');
+      tbody.innerHTML = '';
+      outboxItems.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="font-family:var(--font-mono);color:var(--primary);font-weight:600;">${item.uuid}</td>
+          <td><strong>${item.recipient}</strong></td>
+          <td style="font-family:var(--font-mono);">${item.amount}</td>
+          <td style="font-size:0.8rem;color:var(--text-muted);">${item.time}</td>
+          <td><span class="badge badge-transmitted">${item.status}</span></td>
+          <td style="text-align:right;">
+            <button class="btn btn-outline btn-sm" onclick="showToast('${currentLang === 'tr' ? 'Makbuz indirildi.' : 'Receipt downloaded.'}')"><i class="bi bi-download"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openPdfModal() {
+      const modal = document.getElementById('pdfModal');
+      document.getElementById('pdfBuyer').textContent = document.getElementById('buyerName').value;
+      document.getElementById('pdfTaxId').textContent = 'VKN: ' + document.getElementById('buyerTaxId').value;
+      
+      const list = document.getElementById('pdfItemsList');
+      list.innerHTML = '';
+      let sub = 0, tax = 0;
+
+      lineItems.forEach(item => {
+        const lineTot = item.qty * item.price;
+        const lineTax = lineTot * (item.tax / 100);
+        sub += lineTot;
+        tax += lineTax;
+        const desc = (currentLang === 'tr') ? (item.desc_tr || item.desc) : (item.desc_en || item.desc);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${desc}</td>
+          <td>${item.qty}</td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td>%${item.tax}</td>
+          <td style="text-align:right;">$${lineTot.toFixed(2)}</td>
+        `;
+        list.appendChild(tr);
+      });
+
+      document.getElementById('pdfSubtotal').textContent = `$${sub.toFixed(2)}`;
+      document.getElementById('pdfTax').textContent = `$${tax.toFixed(2)}`;
+      document.getElementById('pdfTotal').textContent = `$${(sub + tax).toFixed(2)}`;
+
+      modal.classList.add('active');
+    }
+    function closePdfModal() { document.getElementById('pdfModal').classList.remove('active'); }
+
+    function openAuthModal() { document.getElementById('authModal').classList.add('active'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('active'); }
+
+    function setRoleByPreset(idx) {
+      const dict = i18n[currentLang] || i18n.tr;
+      currentRoleIndex = idx;
+      const preset = rolePresets[idx];
+      document.getElementById('userNameText').textContent = (currentLang === 'tr') ? preset.trName : preset.enName;
+      document.getElementById('userRoleText').textContent = (currentLang === 'tr') ? preset.trRole : preset.enRole;
+      saveState();
+      closeAuthModal();
+      showToast(`${dict.toastActiveRole} ${(currentLang === 'tr') ? preset.trName : preset.enName}`);
+    }
+
+    // Initialize with Turkish default
+    applyLanguage(currentLang);
+    saveState();
+  </script>
+</body>
+</html>
