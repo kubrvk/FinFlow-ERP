@@ -470,6 +470,144 @@
       gap: 0.35rem;
     }
     .login-footer a:hover { text-decoration: underline; }
+
+    /* ERP Console Sidebar Layout */
+    .erp-app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+    .erp-sidebar {
+      width: 260px;
+      background: #0f172a;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid #1e293b;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    @media (max-width: 960px) {
+      .erp-app-shell { flex-direction: column; }
+      .erp-sidebar { width: 100%; height: auto; position: static; }
+    }
+    .sidebar-brand {
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-tenant {
+      padding: 0.85rem 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .sidebar-nav {
+      padding: 1rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+    }
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      color: #94a3b8;
+      background: transparent;
+      border: 1px solid transparent;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: all 0.15s;
+    }
+    .sidebar-btn:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.06);
+    }
+    .sidebar-btn.active {
+      color: #fff;
+      background: var(--primary);
+      box-shadow: 0 4px 12px rgba(67, 56, 202, 0.4);
+    }
+    .sidebar-footer {
+      padding: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.2);
+    }
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      padding: 0.35rem 0.5rem;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .sidebar-user:hover { background: rgba(255,255,255,0.06); }
+    .erp-main-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--bg);
+    }
+    .erp-topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .erp-metrics-bar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .erp-metric {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .erp-metric-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .erp-metric-val {
+      font-size: 1.15rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+    }
+    .currency-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--primary-subtle);
+      border: 1px solid #c7d2fe;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+    }
   </style>
 </head>
 <body>
@@ -546,55 +684,100 @@
     </div>
   </div>
 
-  <!-- Header -->
-  <header>
-    <a href="index.html" class="brand">
-      <div class="brand-icon"><i class="bi bi-receipt-cutoff"></i></div>
-      <div>
-        <span>FinFlow ERP</span>
-        <span id="brandSub" style="font-size:0.75rem;font-weight:500;color:var(--text-muted);display:block;margin-top:-3px;">Kurumsal Defter &amp; Mevzuata Uygun UBL Motoru</span>
+  <div class="erp-app-shell">
+    <!-- ERP Left Sidebar -->
+    <aside class="erp-sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-wallet2"></i></div>
+        <div>
+          <span style="font-weight:800;font-size:1.15rem;letter-spacing:-0.3px;color:#fff;">FinFlow<span style="color:#818cf8;">ERP</span></span>
+          <span style="font-size:0.72rem;color:#94a3b8;display:block;" id="brandSub">Kurumsal Defter &amp; UBL Motoru</span>
+        </div>
       </div>
-    </a>
 
-    <div class="header-center">
-      <span class="status-dot"></span>
-      <span id="headerStatus">UBL 2.1 &amp; Peppol BIS Billing 3.0 Schematron Doğrulaması Aktif</span>
-    </div>
-
-    <div class="header-right">
-      <div class="lang-toggle" onclick="toggleLanguage()">
-        <span id="langTr" class="active">TR</span>
-        <span style="opacity:0.4;">|</span>
-        <span id="langEn">EN</span>
+      <div class="sidebar-tenant">
+        <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.5px;color:#94a3b8;margin-bottom:0.25rem;">Şirket / Kiracı</div>
+        <div style="font-weight:700;font-size:0.85rem;color:#f8fafc;"><i class="bi bi-building"></i> ACME Holding A.Ş.</div>
+        <div style="font-size:0.75rem;color:#a5b4fc;margin-top:2px;">Mali Dönem: 2026/Q3 (Aktif)</div>
       </div>
-      <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.88rem;">
-        <i class="bi bi-person-circle" style="font-size:1.3rem;color:var(--primary);"></i>
-        <span id="userNameText" style="font-weight:600;">Finans Müdürü</span>
-        <span id="userRoleText" style="font-size:0.75rem;background:#e2e8f0;padding:0.15rem 0.45rem;border-radius:4px;color:#475569;">CFO &amp; Denetçi</span>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-btn active" onclick="switchTab('invoice', this)" id="tabBtnInvoice">
+          <i class="bi bi-receipt-cutoff"></i> <span id="lblTabInvoice">E-Fatura UBL 2.1 Stüdyosu</span>
+        </button>
+        <button class="sidebar-btn" onclick="switchTab('ledger', this)" id="tabBtnLedger">
+          <i class="bi bi-book-half"></i> <span id="lblTabLedger">Genel Defter &amp; Banka Mutabakatı</span>
+        </button>
+        <button class="sidebar-btn" onclick="switchTab('outbox', this)" id="tabBtnOutbox">
+          <i class="bi bi-send-check"></i> <span id="lblTabOutbox">İletilen Faturalar</span> (<span id="outboxCount">8</span>)
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user" onclick="openAuthModal()">
+          <i class="bi bi-person-circle" style="font-size:1.3rem;color:#818cf8;"></i>
+          <div style="overflow:hidden;">
+            <div id="userNameText" style="font-weight:700;font-size:0.82rem;color:#fff;white-space:nowrap;text-overflow:ellipsis;">Finans Müdürü</div>
+            <div id="userRoleText" style="font-size:0.72rem;color:#94a3b8;">CFO &amp; Denetçi</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.4rem;margin-top:0.75rem;">
+          <button class="btn btn-outline btn-sm" style="flex:1;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);color:#fff;font-size:0.78rem;" onclick="openAuthModal()">
+            <i class="bi bi-person-gear"></i> <span id="lblSwitchRole">Rol</span>
+          </button>
+          <button class="btn btn-outline btn-sm" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:#fca5a5;font-size:0.78rem;" onclick="logoutUser()">
+            <i class="bi bi-box-arrow-right"></i> <span id="lblLogout">Çıkış</span>
+          </button>
+        </div>
       </div>
-      <button class="btn btn-outline btn-sm" onclick="openAuthModal()" id="btnSwitchRole">
-        <i class="bi bi-person-gear"></i> <span id="lblSwitchRole">Rol Değiştir</span>
-      </button>
-      <button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:#fca5a5;" onclick="logoutUser()">
-        <i class="bi bi-box-arrow-right"></i> <span id="lblLogout">Çıkış</span>
-      </button>
-    </div>
-  </header>
+    </aside>
 
-  <!-- Navigation Tabs -->
-  <div class="nav-tabs-bar">
-    <button class="tab-btn active" onclick="switchTab('invoice', this)" id="tabBtnInvoice">
-      <i class="bi bi-file-earmark-code"></i> <span id="lblTabInvoice">E-Fatura UBL 2.1 Stüdyosu</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('ledger', this)" id="tabBtnLedger">
-      <i class="bi bi-book-half"></i> <span id="lblTabLedger">Genel Defter &amp; Banka Mutabakatı</span>
-    </button>
-    <button class="tab-btn" onclick="switchTab('outbox', this)" id="tabBtnOutbox">
-      <i class="bi bi-send-check"></i> <span id="lblTabOutbox">İletilen Faturalar</span> (<span id="outboxCount">8</span>)
-    </button>
-  </div>
+    <!-- ERP Main Body -->
+    <div class="erp-main-body">
+      <!-- Top Financial Toolbar -->
+      <header class="erp-topbar">
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+          <span class="currency-pill">
+            <span style="color:var(--text-muted);font-size:0.75rem;">Döviz:</span>
+            <strong style="color:var(--primary);">TRY (₺)</strong>
+          </span>
+          <span style="font-size:0.8rem;color:var(--text-muted);font-family:var(--font-mono);">
+            USD/TRY: 34.18 &bull; EUR/TRY: 37.82 &bull; Schematron: Aktif
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="lang-toggle" onclick="toggleLanguage()">
+            <span id="langTr" class="active">TR</span>
+            <span style="opacity:0.4;">|</span>
+            <span id="langEn">EN</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="openNewInvoiceModal()">
+            <i class="bi bi-plus-lg"></i> <span id="lblBtnNewInv">Hızlı Fatura Girişi</span>
+          </button>
+        </div>
+      </header>
 
-  <main>
+      <!-- Sticky Balance Sheet Metrics Bar -->
+      <div class="erp-metrics-bar">
+        <div class="erp-metric">
+          <span class="erp-metric-label" id="kpiLabelTurnover">Toplam Dönem Cirosu</span>
+          <strong class="erp-metric-val" style="color:var(--primary);" id="kpiTurnover">₺1,248,920.00</strong>
+        </div>
+        <div class="erp-metric">
+          <span class="erp-metric-label" id="kpiLabelTax">KDV / Net Vergi</span>
+          <strong class="erp-metric-val" style="color:var(--warning);" id="kpiVat">₺224,805.60</strong>
+        </div>
+        <div class="erp-metric">
+          <span class="erp-metric-label" id="kpiLabelTransmitted">İletilen E-Faturalar</span>
+          <strong class="erp-metric-val" style="color:var(--accent);" id="kpiOutboxCount">8 Kayıt</strong>
+        </div>
+        <div class="erp-metric">
+          <span class="erp-metric-label" id="kpiLabelLedger">Genel Defter Dengesi</span>
+          <strong class="erp-metric-val" style="color:#059669;" id="kpiBalanceStatus">0.00 Fark (Dengeli)</strong>
+        </div>
+      </div>
+
+      <main style="padding:1.5rem 2rem;flex:1;max-width:none;margin:0;">
     <!-- TAB 1: E-Invoice UBL 2.1 Studio -->
     <div id="tab-invoice" class="tab-pane">
       <div class="card">
@@ -855,6 +1038,74 @@
       </a>
     </div>
   </footer>
+    </div><!-- /.erp-main-body -->
+  </div><!-- /.erp-app-shell -->
+
+  <!-- Fast Invoice Modal -->
+  <div class="modal-backdrop" id="newInvoiceModal">
+    <div class="modal-card" style="max-width:520px;">
+      <div class="modal-header">
+        <h3 style="font-size:1.1rem;font-weight:700;" id="newInvModalTitle"><i class="bi bi-file-earmark-plus text-primary"></i> Hızlı Fatura Düzenle</h3>
+        <button style="border:none;background:none;font-size:1.2rem;cursor:pointer;" onclick="closeNewInvoiceModal()">&times;</button>
+      </div>
+      <form onsubmit="handleCreateInvoice(event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" id="lblNewInvRecipient">Alıcı Kurum / Müşteri Adı</label>
+            <input type="text" class="form-control" id="newInvRecipient" required placeholder="Örn: Anadolu Dağıtım A.Ş.">
+          </div>
+          <div class="form-group">
+            <label class="form-label" id="lblNewInvTaxId">Vergi Kimlik No (VKN)</label>
+            <input type="text" class="form-control" id="newInvTaxId" required placeholder="10 haneli VKN" maxlength="10">
+          </div>
+          <div class="form-grid-3" style="grid-template-columns:1fr 1fr;">
+            <div class="form-group">
+              <label class="form-label" id="lblNewInvAmount">Toplam Tutar ($ USD)</label>
+              <input type="number" step="0.01" min="1" class="form-control" id="newInvAmount" required placeholder="12500.00">
+            </div>
+            <div class="form-group">
+              <label class="form-label" id="lblNewInvScenario">Fatura Senaryosu</label>
+              <select class="form-control" id="newInvScenario">
+                <option value="GİB ONAYLANDI">TICARIFATURA (GİB)</option>
+                <option value="PEPPOL İLETİLDİ">IHRACAT (PEPPOL)</option>
+                <option value="GİB ONAYLANDI">EARSIVFATURA (B2C)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeNewInvoiceModal()" id="btnCancelNewInv">İptal</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitNewInv"><i class="bi bi-check2-circle"></i> Faturayı Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="deleteConfirmModal">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header" style="border-bottom-color:#fee2e2;">
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--danger);" id="deleteModalTitle">
+          <i class="bi bi-exclamation-triangle-fill"></i> Kayıt Silme Onayı
+        </h3>
+        <button style="border:none;background:none;font-size:1.2rem;cursor:pointer;" onclick="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem;color:#475569;" id="deleteModalDesc">
+          Bu finansal kaydı sistemden kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+        </p>
+        <div style="background:#fef2f2;border:1px solid #fecaca;padding:0.75rem;border-radius:8px;font-size:0.82rem;color:#991b1b;margin-top:0.75rem;font-family:var(--font-mono);" id="deleteTargetInfo">
+          ID: --
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeDeleteModal()" id="btnCancelDelete">Vazgeç</button>
+        <button type="button" class="btn btn-primary" style="background:var(--danger);border-color:var(--danger);" onclick="executeDeleteErpItem()" id="btnConfirmDelete">
+          <i class="bi bi-trash3-fill"></i> Kalıcı Olarak Sil
+        </button>
+      </div>
+    </div>
+  </div>
 
   <div class="toast" id="toastMsg">
     <i class="bi bi-check-circle-fill" style="color:#10b981;"></i>
@@ -943,7 +1194,25 @@
         credEmail: "E-posta:",
         credPass: "Şifre:",
         quickRole: "Hızlı Rol Seçimi:",
-        logout: "Çıkış"
+        logout: "Çıkış",
+        toastDeleted: "Kayıt başarıyla silindi.",
+        toastInvCreated: "Yeni e-fatura oluşturuldu ve iletildi.",
+        newInvTitle: "Hızlı Fatura Düzenle",
+        lblNewInvRecipient: "Alıcı Kurum / Müşteri Adı",
+        lblNewInvTaxId: "Vergi Kimlik No (VKN)",
+        lblNewInvAmount: "Toplam Tutar ($ USD)",
+        lblNewInvScenario: "Fatura Senaryosu",
+        btnCancelNewInv: "İptal",
+        btnSubmitNewInv: "Faturayı Kaydet",
+        deleteModalTitle: "Kayıt Silme Onayı",
+        deleteModalDesc: "Bu finansal kaydı sistemden kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+        btnCancelDelete: "Vazgeç",
+        btnConfirmDelete: "Kalıcı Olarak Sil",
+        kpiLabelTurnover: "Toplam Dönem Cirosu",
+        kpiLabelTax: "KDV / Net Vergi",
+        kpiLabelTransmitted: "İletilen E-Faturalar",
+        kpiLabelLedger: "Genel Defter Dengesi",
+        btnNewInv: "Hızlı Fatura Girişi"
       },
       en: {
         brandSub: "Enterprise Ledger & Regulatory UBL Engine",
@@ -1023,7 +1292,25 @@
         credEmail: "Email:",
         credPass: "Password:",
         quickRole: "Quick Role Switch:",
-        logout: "Logout"
+        logout: "Logout",
+        toastDeleted: "Record deleted successfully.",
+        toastInvCreated: "New e-invoice generated and transmitted.",
+        newInvTitle: "Fast Invoice Creation",
+        lblNewInvRecipient: "Recipient Organization / Client",
+        lblNewInvTaxId: "Tax Identification Number (VKN)",
+        lblNewInvAmount: "Total Amount ($ USD)",
+        lblNewInvScenario: "Invoice Scenario",
+        btnCancelNewInv: "Cancel",
+        btnSubmitNewInv: "Save & Transmit Invoice",
+        deleteModalTitle: "Record Deletion Confirmation",
+        deleteModalDesc: "Are you sure you want to permanently delete this financial record? This action cannot be reversed.",
+        btnCancelDelete: "Cancel",
+        btnConfirmDelete: "Delete Permanently",
+        kpiLabelTurnover: "Total Turnover",
+        kpiLabelTax: "VAT / Net Tax",
+        kpiLabelTransmitted: "Transmitted E-Invoices",
+        kpiLabelLedger: "General Ledger Balance",
+        btnNewInv: "Fast Invoice Entry"
       }
     };
 
@@ -1158,6 +1445,23 @@
       if (document.getElementById('loginLangTr')) document.getElementById('loginLangTr').className = (lang === 'tr') ? 'active' : '';
       if (document.getElementById('loginLangEn')) document.getElementById('loginLangEn').className = (lang === 'en') ? 'active' : '';
 
+      if (document.getElementById('newInvModalTitle')) document.getElementById('newInvModalTitle').innerHTML = `<i class="bi bi-file-earmark-plus text-primary"></i> ${dict.newInvTitle}`;
+      if (document.getElementById('lblNewInvRecipient')) document.getElementById('lblNewInvRecipient').textContent = dict.lblNewInvRecipient;
+      if (document.getElementById('lblNewInvTaxId')) document.getElementById('lblNewInvTaxId').textContent = dict.lblNewInvTaxId;
+      if (document.getElementById('lblNewInvAmount')) document.getElementById('lblNewInvAmount').textContent = dict.lblNewInvAmount;
+      if (document.getElementById('lblNewInvScenario')) document.getElementById('lblNewInvScenario').textContent = dict.lblNewInvScenario;
+      if (document.getElementById('btnCancelNewInv')) document.getElementById('btnCancelNewInv').textContent = dict.btnCancelNewInv;
+      if (document.getElementById('btnSubmitNewInv')) document.getElementById('btnSubmitNewInv').innerHTML = `<i class="bi bi-check2-circle"></i> ${dict.btnSubmitNewInv}`;
+      if (document.getElementById('deleteModalTitle')) document.getElementById('deleteModalTitle').innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${dict.deleteModalTitle}`;
+      if (document.getElementById('deleteModalDesc')) document.getElementById('deleteModalDesc').textContent = dict.deleteModalDesc;
+      if (document.getElementById('btnCancelDelete')) document.getElementById('btnCancelDelete').textContent = dict.btnCancelDelete;
+      if (document.getElementById('btnConfirmDelete')) document.getElementById('btnConfirmDelete').innerHTML = `<i class="bi bi-trash3-fill"></i> ${dict.btnConfirmDelete}`;
+      if (document.getElementById('kpiLabelTurnover')) document.getElementById('kpiLabelTurnover').textContent = dict.kpiLabelTurnover;
+      if (document.getElementById('kpiLabelTax')) document.getElementById('kpiLabelTax').textContent = dict.kpiLabelTax;
+      if (document.getElementById('kpiLabelTransmitted')) document.getElementById('kpiLabelTransmitted').textContent = dict.kpiLabelTransmitted;
+      if (document.getElementById('kpiLabelLedger')) document.getElementById('kpiLabelLedger').textContent = dict.kpiLabelLedger;
+      if (document.getElementById('lblBtnNewInv')) document.getElementById('lblBtnNewInv').innerHTML = `<i class="bi bi-plus-lg"></i> ${dict.btnNewInv}`;
+
       // Update Role Display
       const preset = rolePresets[currentRoleIndex];
       document.getElementById('userNameText').textContent = (lang === 'tr') ? preset.trName : preset.enName;
@@ -1168,13 +1472,14 @@
       renderLedger();
       renderOutbox();
       generateXML();
+      updateErpMetrics();
     }
 
     function saveState() {
       localStorage.setItem('ff_role_idx', currentRoleIndex.toString());
       localStorage.setItem('ff_ledger_v2', JSON.stringify(ledgerAccounts));
       localStorage.setItem('ff_outbox_v2', JSON.stringify(outboxItems));
-      document.getElementById('outboxCount').textContent = outboxItems.length;
+      updateErpMetrics();
     }
 
     function showToast(text) {
@@ -1396,8 +1701,9 @@
             ${diff === 0 ? '$0.00' : (diff > 0 ? '+$' : '-$') + Math.abs(diff).toFixed(2)}
           </td>
           <td><span class="badge ${isBalanced ? 'badge-balanced' : 'badge-diff'}">${statusLabel}</span></td>
-          <td style="text-align:right;">
+          <td style="text-align:right;white-space:nowrap;">
             <button class="btn btn-outline btn-sm" onclick="reconcileItem(${idx})"><i class="bi bi-check2"></i> ${dict.btnReconcile}</button>
+            <button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:#fca5a5;margin-left:0.35rem;" onclick="promptDeleteLedger('${acc.code}')" title="${currentLang === 'tr' ? 'Hesabı Sil' : 'Delete Account'}"><i class="bi bi-trash3"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -1432,12 +1738,126 @@
           <td style="font-family:var(--font-mono);">${item.amount}</td>
           <td style="font-size:0.8rem;color:var(--text-muted);">${item.time}</td>
           <td><span class="badge badge-transmitted">${item.status}</span></td>
-          <td style="text-align:right;">
+          <td style="text-align:right;white-space:nowrap;">
             <button class="btn btn-outline btn-sm" onclick="showToast('${currentLang === 'tr' ? 'Makbuz indirildi.' : 'Receipt downloaded.'}')"><i class="bi bi-download"></i></button>
+            <button class="btn btn-outline btn-sm" style="color:var(--danger);border-color:#fca5a5;margin-left:0.35rem;" onclick="promptDeleteOutbox('${item.uuid}')" title="${currentLang === 'tr' ? 'Faturayı Sil' : 'Delete Invoice'}"><i class="bi bi-trash3"></i></button>
           </td>
         `;
         tbody.appendChild(tr);
       });
+    }
+
+    let itemToDelete = null;
+
+    function promptDeleteOutbox(uuid) {
+      itemToDelete = { type: 'outbox', id: uuid };
+      const dict = i18n[currentLang] || i18n.tr;
+      document.getElementById('deleteModalTitle').innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${dict.deleteModalTitle}`;
+      document.getElementById('deleteModalDesc').textContent = dict.deleteModalDesc;
+      document.getElementById('deleteTargetInfo').textContent = `UUID: ${uuid}`;
+      document.getElementById('deleteConfirmModal').classList.add('active');
+    }
+
+    function promptDeleteLedger(code) {
+      itemToDelete = { type: 'ledger', id: code };
+      const dict = i18n[currentLang] || i18n.tr;
+      document.getElementById('deleteModalTitle').innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${dict.deleteModalTitle}`;
+      document.getElementById('deleteModalDesc').textContent = dict.deleteModalDesc;
+      document.getElementById('deleteTargetInfo').textContent = `${currentLang === 'tr' ? 'Hesap Kodu' : 'Account Code'}: ${code}`;
+      document.getElementById('deleteConfirmModal').classList.add('active');
+    }
+
+    function closeDeleteModal() {
+      document.getElementById('deleteConfirmModal').classList.remove('active');
+      itemToDelete = null;
+    }
+
+    function executeDeleteErpItem() {
+      if (!itemToDelete) return;
+      const dict = i18n[currentLang] || i18n.tr;
+      if (itemToDelete.type === 'outbox') {
+        outboxItems = outboxItems.filter(i => i.uuid !== itemToDelete.id);
+        saveState();
+        renderOutbox();
+        showToast(dict.toastDeleted);
+      } else if (itemToDelete.type === 'ledger') {
+        ledgerAccounts = ledgerAccounts.filter(a => a.code !== itemToDelete.id);
+        saveState();
+        renderLedger();
+        showToast(dict.toastDeleted);
+      }
+      closeDeleteModal();
+    }
+
+    function openNewInvoiceModal() {
+      document.getElementById('newInvoiceModal').classList.add('active');
+    }
+
+    function closeNewInvoiceModal() {
+      document.getElementById('newInvoiceModal').classList.remove('active');
+    }
+
+    function handleCreateInvoice(e) {
+      e.preventDefault();
+      const recipient = document.getElementById('newInvRecipient').value.trim();
+      const taxId = document.getElementById('newInvTaxId').value.trim();
+      const amount = parseFloat(document.getElementById('newInvAmount').value) || 0;
+      const status = document.getElementById('newInvScenario').value;
+      const dict = i18n[currentLang] || i18n.tr;
+
+      const newId = '9fa' + Math.random().toString(36).substring(2, 9) + '-8321-4f1e';
+      outboxItems.unshift({
+        uuid: newId,
+        recipient: recipient,
+        amount: `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+        time: new Date().toISOString().replace('T', ' ').substring(0, 16),
+        status: status
+      });
+      saveState();
+      renderOutbox();
+      closeNewInvoiceModal();
+      document.getElementById('newInvRecipient').value = '';
+      document.getElementById('newInvTaxId').value = '';
+      document.getElementById('newInvAmount').value = '';
+      showToast(dict.toastInvCreated);
+    }
+
+    function updateErpMetrics() {
+      let outboxSum = 0;
+      outboxItems.forEach(i => {
+        const num = parseFloat((i.amount || '').replace(/[^0-9.]/g, '')) || 0;
+        outboxSum += num;
+      });
+      const rate = 34.18;
+      const turnoverTry = outboxSum * rate;
+      const vatTry = turnoverTry * 0.18;
+
+      const turnoverEl = document.getElementById('kpiTurnover');
+      if (turnoverEl) turnoverEl.textContent = `₺${turnoverTry.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      const vatEl = document.getElementById('kpiVat');
+      if (vatEl) vatEl.textContent = `₺${vatTry.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+      const outboxEl = document.getElementById('kpiOutboxCount');
+      if (outboxEl) outboxEl.textContent = `${outboxItems.length} ${currentLang === 'tr' ? 'Kayıt' : 'Records'}`;
+
+      const outboxNavEl = document.getElementById('outboxCount');
+      if (outboxNavEl) outboxNavEl.textContent = outboxItems.length;
+
+      let totalDiff = 0;
+      ledgerAccounts.forEach(a => {
+        totalDiff += Math.abs(a.ledger - a.bank);
+      });
+      const balanceEl = document.getElementById('kpiBalanceStatus');
+      if (balanceEl) {
+        if (totalDiff < 0.01) {
+          balanceEl.textContent = currentLang === 'tr' ? '0.00 Fark (Dengeli)' : '$0.00 Diff (Balanced)';
+          balanceEl.style.color = '#059669';
+        } else {
+          balanceEl.textContent = (currentLang === 'tr' ? 'Fark: $' : 'Diff: $') + totalDiff.toFixed(2);
+          balanceEl.style.color = '#ef4444';
+        }
+      }
     }
 
     function openPdfModal() {
