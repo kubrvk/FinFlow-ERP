@@ -379,12 +379,12 @@
     }
     .toast.show { transform: translateY(0); opacity: 1; }
 
-    /* Fullscreen Login Portal */
+    /* Two-Panel Wall Street Corporate ERP Login */
     .login-overlay {
       position: fixed;
       inset: 0;
       z-index: 10000;
-      background: linear-gradient(135deg, #0f172a 0%, #312e81 100%);
+      background: radial-gradient(circle at 30% 20%, #0f172a 0%, #030712 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -392,25 +392,90 @@
       padding: 1.5rem;
       overflow-y: auto;
     }
-    .login-box {
+    .erp-login-modal {
       background: #ffffff;
       color: #0f172a;
       border-radius: 16px;
       width: 100%;
-      max-width: 440px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
-      padding: 2rem;
-      border: 1px solid #e2e8f0;
+      max-width: 860px;
+      display: flex;
+      flex-direction: row;
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.08);
+      overflow: hidden;
+      border: 1px solid #cbd5e1;
       position: relative;
     }
-    .login-box .form-label {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #475569;
-      margin-bottom: 0.35rem;
-      display: block;
+    .erp-login-aside {
+      width: 42%;
+      background: #0b1329;
+      color: #f8fafc;
+      padding: 2.25rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #1e293b;
+      position: relative;
     }
-    .login-box .form-control {
+    .erp-login-aside::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: radial-gradient(circle at 50% 100%, rgba(5, 150, 105, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .erp-holding-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #38bdf8;
+      width: fit-content;
+      margin-bottom: 1.5rem;
+    }
+    .erp-fx-ticker {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 0.85rem;
+      margin: 1.25rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+    }
+    .erp-fx-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+    .erp-fx-row:last-child { margin-bottom: 0; }
+    .erp-login-main {
+      width: 58%;
+      padding: 2rem 2.25rem;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .erp-login-main .form-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: var(--font-mono);
+    }
+    .erp-login-main .form-control {
       width: 100%;
       padding: 0.65rem 0.85rem;
       border: 1px solid #cbd5e1;
@@ -418,20 +483,21 @@
       font-size: 0.9rem;
       color: #0f172a;
       background: #f8fafc;
+      font-family: var(--font-mono);
       transition: all 0.15s;
     }
-    .login-box .form-control:focus {
+    .erp-login-main .form-control:focus {
       outline: none;
-      border-color: var(--primary);
+      border-color: #059669;
       background: #ffffff;
-      box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.15);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
     }
     .login-creds-box {
       background: #f8fafc;
       border: 1px dashed #cbd5e1;
       border-radius: 10px;
       padding: 0.85rem 1rem;
-      margin-top: 1.25rem;
+      margin-top: 1rem;
       font-size: 0.82rem;
       color: #334155;
     }
@@ -447,13 +513,13 @@
       transition: all 0.15s;
     }
     .role-quick-btn:hover, .role-quick-btn.active {
-      border-color: var(--primary);
-      color: var(--primary);
-      background: #eef2ff;
+      border-color: #059669;
+      color: #059669;
+      background: #ecfdf5;
     }
     .login-footer {
-      margin-top: 1.5rem;
-      padding-top: 0.85rem;
+      margin-top: 1.25rem;
+      padding-top: 0.75rem;
       border-top: 1px solid #e2e8f0;
       display: flex;
       justify-content: space-between;
@@ -462,7 +528,7 @@
       color: #64748b;
     }
     .login-footer a {
-      color: var(--primary);
+      color: #059669;
       text-decoration: none;
       font-weight: 600;
       display: inline-flex;
@@ -470,6 +536,11 @@
       gap: 0.35rem;
     }
     .login-footer a:hover { text-decoration: underline; }
+    @media (max-width: 768px) {
+      .erp-login-modal { flex-direction: column; }
+      .erp-login-aside { width: 100%; border-right: none; border-bottom: 1px solid #1e293b; }
+      .erp-login-main { width: 100%; }
+    }
 
     /* ERP Console Sidebar Layout */
     .erp-app-shell {
@@ -612,73 +683,113 @@
 </head>
 <body>
 
-  <!-- Fullscreen Login Portal (Initial Gate) -->
+  <!-- Fullscreen Login Portal (Two-Panel Wall Street Corporate ERP) -->
   <div class="login-overlay" id="loginPortal">
-    <div class="login-box">
-      <!-- Top header with Lang toggle -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
-        <div style="display:flex;align-items:center;gap:0.65rem;">
-          <div class="brand-icon" style="width:36px;height:36px;font-size:1.15rem;"><i class="bi bi-receipt-cutoff"></i></div>
-          <div>
-            <div style="font-weight:800;font-size:1.2rem;color:#0f172a;line-height:1.2;">FinFlow ERP</div>
-            <div style="font-size:0.75rem;color:#64748b;" id="lblLoginSubtitle">Kurumsal Finans &amp; E-Fatura Giriş Portalı</div>
+    <div class="erp-login-modal">
+      <!-- Left Panel: Corporate Trust & FX Ribbon -->
+      <div class="erp-login-aside">
+        <div>
+          <div class="erp-holding-badge">
+            <i class="bi bi-shield-lock-fill"></i> ACME HOLDING A.Ş.
+          </div>
+          <h2 style="font-size:1.3rem;font-weight:800;line-height:1.3;margin-bottom:0.6rem;color:#ffffff;">
+            Kurumsal E-Dönüşüm &amp; Finansal Mizan Terminali
+          </h2>
+          <p style="font-size:0.78rem;color:#94a3b8;line-height:1.5;">
+            GİB e-Fatura, e-İrsaliye ve tek düzen hesap planı standartlarında tam denetimli kurumsal finansal orkestrasyon sistemi.
+          </p>
+
+          <div class="erp-fx-ticker">
+            <div style="font-size:0.68rem;text-transform:uppercase;color:#64748b;font-weight:700;margin-bottom:0.35rem;">
+              TCMB Canlı Döviz &amp; Entegratör
+            </div>
+            <div class="erp-fx-row">
+              <span style="color:#cbd5e1;">USD / TRY</span>
+              <span style="color:#34d399;font-weight:700;">34.1800 ₺</span>
+            </div>
+            <div class="erp-fx-row">
+              <span style="color:#cbd5e1;">EUR / TRY</span>
+              <span style="color:#34d399;font-weight:700;">37.9250 ₺</span>
+            </div>
+            <div class="erp-fx-row">
+              <span style="color:#cbd5e1;">GİB Entegratör</span>
+              <span style="color:#38bdf8;font-weight:700;">v2.4 ONLINE</span>
+            </div>
           </div>
         </div>
-        <div class="lang-toggle" onclick="toggleLanguage()" style="background:#f1f5f9;color:#0f172a;border-color:#cbd5e1;">
-          <span id="loginLangTr" class="active">TR</span>
-          <span style="opacity:0.4;">|</span>
-          <span id="loginLangEn">EN</span>
+
+        <div style="font-size:0.72rem;color:#64748b;display:flex;align-items:center;gap:0.5rem;">
+          <i class="bi bi-patch-check-fill text-success" style="font-size:1rem;"></i>
+          <span>SOC-2 Type II Uyumlu &amp; ISO 27001 Finansal Şifreleme</span>
         </div>
       </div>
 
-      <form onsubmit="event.preventDefault(); submitLogin();">
-        <div style="margin-bottom:0.85rem;">
-          <label class="form-label" id="lblLoginUser">Kurumsal E-posta / Finans ID</label>
-          <input type="text" id="loginEmail" class="form-control" value="finans@finflowerp.com" required>
+      <!-- Right Panel: Sign In & Pre-filled Presets -->
+      <div class="erp-login-main">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+          <div>
+            <div style="display:inline-block;padding:0.18rem 0.5rem;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:4px;font-size:0.68rem;font-weight:700;color:#065f46;margin-bottom:0.25rem;font-family:var(--font-mono);">
+              TENANT: ACME-HOLDING-TR-01
+            </div>
+            <div style="font-weight:800;font-size:1.25rem;color:#0f172a;line-height:1.2;">FinFlow<span style="color:#059669;">.ERP</span></div>
+            <div style="font-size:0.75rem;color:#64748b;" id="lblLoginSubtitle">Kurumsal Finans &amp; E-Fatura Giriş Portalı</div>
+          </div>
+          <div class="lang-toggle" onclick="toggleLanguage()" style="background:#f1f5f9;color:#0f172a;border-color:#cbd5e1;">
+            <span id="loginLangTr" class="active">TR</span>
+            <span style="opacity:0.4;">|</span>
+            <span id="loginLangEn">EN</span>
+          </div>
         </div>
-        <div style="margin-bottom:1rem;">
-          <label class="form-label" id="lblLoginPass">ERP Sistem Şifresi</label>
-          <input type="password" id="loginPassword" class="form-control" value="finflow2026" required>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;font-size:0.8rem;color:#64748b;">
-          <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
-            <input type="checkbox" checked style="accent-color:var(--primary);"> <span id="lblRemember">Beni Hatırla</span>
-          </label>
-          <span style="color:var(--primary);cursor:pointer;font-weight:600;" id="lblForgot">Şifremi Unuttum</span>
-        </div>
-        <button type="submit" class="btn btn-primary w-100" style="padding:0.75rem;font-size:0.95rem;justify-content:center;" id="btnLoginSubmit">
-          <i class="bi bi-box-arrow-in-right"></i> <span id="btnLoginText">Giriş Yap</span>
-        </button>
-      </form>
 
-      <!-- Pre-filled Demo Credentials Box -->
-      <div class="login-creds-box">
-        <div style="font-weight:700;margin-bottom:0.45rem;display:flex;align-items:center;gap:0.4rem;color:#0f172a;">
-          <i class="bi bi-key-fill" style="color:var(--primary);"></i>
-          <span id="lblDemoCredsTitle">Demo Giriş Bilgileri (Hazır Girildi)</span>
-        </div>
-        <div style="margin-bottom:0.25rem;">
-          <span id="lblCredEmail">E-posta:</span> <strong style="font-family:var(--font-mono);color:#0f172a;" id="displayCredEmail">finans@finflowerp.com</strong>
-        </div>
-        <div style="margin-bottom:0.65rem;">
-          <span id="lblCredPass">Şifre:</span> <strong style="font-family:var(--font-mono);color:#0f172a;">finflow2026</strong>
-        </div>
-        <div style="font-size:0.75rem;color:#64748b;margin-bottom:0.35rem;" id="lblQuickRole">Hızlı Rol Seçimi:</div>
-        <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
-          <button type="button" class="role-quick-btn active" onclick="setLoginPreset(0, this)">Finans Müdürü (CFO)</button>
-          <button type="button" class="role-quick-btn" onclick="setLoginPreset(1, this)">Mali Müşavir (YMM)</button>
-          <button type="button" class="role-quick-btn" onclick="setLoginPreset(2, this)">Müşteri</button>
-          <button type="button" class="role-quick-btn" onclick="setLoginPreset(3, this)">Kullanıcı</button>
-        </div>
-      </div>
+        <form onsubmit="event.preventDefault(); submitLogin();">
+          <div style="margin-bottom:0.85rem;">
+            <label class="form-label" id="lblLoginUser"><i class="bi bi-person-badge"></i> Kurumsal E-Finans Kullanıcı Kodu</label>
+            <input type="text" id="loginEmail" class="form-control" value="finans@finflowerp.com" required>
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label class="form-label" id="lblLoginPass"><i class="bi bi-shield-lock"></i> HSM Şifreli Kurumsal Parola</label>
+            <input type="password" id="loginPassword" class="form-control" value="finflow2026" required>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.15rem;font-size:0.8rem;color:#64748b;">
+            <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+              <input type="checkbox" checked style="accent-color:#059669;"> <span id="lblRemember">Finansal Oturumu Hatırla</span>
+            </label>
+            <span style="color:#059669;cursor:pointer;font-weight:600;" id="lblForgot">Şifre Sıfırla</span>
+          </div>
+          <button type="submit" class="btn btn-primary w-100" style="padding:0.72rem;font-size:0.95rem;justify-content:center;background:#059669;border-color:#047857;" id="btnLoginSubmit">
+            <i class="bi bi-safe2"></i> <span id="btnLoginText">Mizan &amp; Fatura Konsoluna Giriş</span>
+          </button>
+        </form>
 
-      <!-- Footer on Login Screen -->
-      <div class="login-footer">
-        <div>Developed by Beraat Yetkin</div>
-        <div>
-          <a href="https://github.com/kubrvk/FinFlow-ERP" target="_blank" rel="noopener noreferrer">
-            <i class="bi bi-github"></i> GitHub
-          </a>
+        <!-- Pre-filled Demo Credentials Box -->
+        <div class="login-creds-box">
+          <div style="font-weight:700;margin-bottom:0.45rem;display:flex;align-items:center;gap:0.4rem;color:#0f172a;">
+            <i class="bi bi-key-fill" style="color:#059669;"></i>
+            <span id="lblDemoCredsTitle">Denetimli Finans Rolleri (Hazır Girildi)</span>
+          </div>
+          <div style="margin-bottom:0.25rem;font-family:var(--font-mono);font-size:0.78rem;">
+            <span id="lblCredEmail">E-posta:</span> <strong style="color:#0f172a;" id="displayCredEmail">finans@finflowerp.com</strong>
+          </div>
+          <div style="margin-bottom:0.65rem;font-family:var(--font-mono);font-size:0.78rem;">
+            <span id="lblCredPass">Şifre:</span> <strong style="color:#0f172a;">finflow2026</strong>
+          </div>
+          <div style="font-size:0.75rem;color:#64748b;margin-bottom:0.35rem;" id="lblQuickRole">Finansal Rol Seçimi:</div>
+          <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
+            <button type="button" class="role-quick-btn active" onclick="setLoginPreset(0, this)">Finans Müdürü (CFO)</button>
+            <button type="button" class="role-quick-btn" onclick="setLoginPreset(1, this)">Mali Müşavir (YMM)</button>
+            <button type="button" class="role-quick-btn" onclick="setLoginPreset(2, this)">Müşteri</button>
+            <button type="button" class="role-quick-btn" onclick="setLoginPreset(3, this)">Kullanıcı</button>
+          </div>
+        </div>
+
+        <!-- Footer on Login Screen -->
+        <div class="login-footer">
+          <div>Developed by Beraat Yetkin</div>
+          <div>
+            <a href="https://github.com/kubrvk/FinFlow-ERP" target="_blank" rel="noopener noreferrer">
+              <i class="bi bi-github"></i> GitHub
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -1185,15 +1296,15 @@
         toastLineAdded: "Fatura kalemi eklendi.",
         toastMinLine: "Fatura en az bir kalem içermelidir.",
         loginSubtitle: "Kurumsal Finans & E-Fatura Giriş Portalı",
-        loginUser: "Kurumsal E-posta / Finans ID",
-        loginPass: "ERP Sistem Şifresi",
-        loginRemember: "Beni Hatırla",
-        loginForgot: "Şifremi Unuttum",
-        loginBtn: "Giriş Yap",
-        demoCredsTitle: "Demo Giriş Bilgileri (Hazır Girildi)",
+        loginUser: "Kurumsal E-Finans Kullanıcı Kodu",
+        loginPass: "HSM Şifreli Kurumsal Parola",
+        loginRemember: "Finansal Oturumu Hatırla",
+        loginForgot: "Şifre Sıfırla",
+        loginBtn: "Mizan & Fatura Konsoluna Giriş",
+        demoCredsTitle: "Denetimli Finans Rolleri (Hazır Girildi)",
         credEmail: "E-posta:",
         credPass: "Şifre:",
-        quickRole: "Hızlı Rol Seçimi:",
+        quickRole: "Finansal Rol Seçimi:",
         logout: "Çıkış",
         toastDeleted: "Kayıt başarıyla silindi.",
         toastInvCreated: "Yeni e-fatura oluşturuldu ve iletildi.",
@@ -1282,17 +1393,17 @@
         toastReset: "Default dataset restored.",
         toastLineAdded: "Line item added.",
         toastMinLine: "Invoice must contain at least one line.",
-        loginSubtitle: "Corporate Finance & E-Invoice Login Portal",
-        loginUser: "Corporate Email / Finance ID",
-        loginPass: "ERP System Password",
-        loginRemember: "Remember Me",
-        loginForgot: "Forgot Password",
-        loginBtn: "Sign In",
-        demoCredsTitle: "Demo Credentials (Pre-filled)",
+        loginSubtitle: "Corporate Finance & E-Invoice Portal",
+        loginUser: "Corporate E-Finance User ID",
+        loginPass: "HSM Encrypted Corporate Password",
+        loginRemember: "Remember Financial Session",
+        loginForgot: "Reset Password",
+        loginBtn: "Access Ledger & Invoicing",
+        demoCredsTitle: "Audited Financial Roles (Pre-filled)",
         credEmail: "Email:",
         credPass: "Password:",
-        quickRole: "Quick Role Switch:",
-        logout: "Logout",
+        quickRole: "Financial Role Switch:",
+        logout: "Sign Out",
         toastDeleted: "Record deleted successfully.",
         toastInvCreated: "New e-invoice generated and transmitted.",
         newInvTitle: "Fast Invoice Creation",
